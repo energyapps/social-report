@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" role="document">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>2017 Energy.gov Digital Accomplishments</title>
+        <meta name="description" content="Social media milestones and achievements for the main DOE accounts">
+        <link href="css/style.css" rel="stylesheet" type="text/css">
+        <!-- Object Fit polyfill -->
+        <script type="text/javascript" src="https://unpkg.com/object-fit-images/dist/ofi.min.js"></script>
+        <!-- Lazy Load images -->
+        <script type="text/javascript" src="https://unpkg.com/object-fit-images/dist/ofi.min.js"></script>
+        <!-- Jarallax -->
+        <link href="css/jarallax.css" rel="stylesheet">
+        <script type="text/javascript" src="js/jarallax.min.js"></script>
+        <script type="text/javascript" src="js/jarallax-video.min.js"></script>
+        <script type="text/javascript" src="js/jarallax-element.min.js"></script>
+        <!-- USWDS -->
+        <link href="css/uswds.css" rel="stylesheet">
+        <script type="text/javascript" src="js/uswds.min.js"></script>
+        <!-- Countup.js -->
+        <script type="text/javascript" src="js/countUp.js"></script>
+
+        
+    </head>
+    <body>
+        <h1 id="hidden">0</h1>
+        <script type="text/javascript"> 
+            settings = {
+                target: "hidden",
+                startVal: 4000,
+                endVal: 7000,
+                decimal: 0,
+                duration: 4
+            };
+        </script>
+
+        <div id="content">
+            <!-- <section id='intro' class="jarallax">
+                <img class="jarallax-img" src="images/site-intro.svg" alt="Introduction"/>
+                <article class='center'>
+                    <div class='content-block'>
+                        <div class='block span1of1 knockout'>
+                            <h1 class='title kern align-left'>2017 Social Media Accomplishments</h1>
+                        </div>
+                    </div>
+                </section>
+            </section> -->
+            <section class="jarallax">
+                <img class="jarallax-img" src="images/FB-background_solar-eclipse.jpg" alt="Background for the impressions on FB"/>
+                <article class="panel-table">
+                    <div class="panel-table-cell">
+                        <div>
+                            <script type="text/javascript"> 
+                                settings = {
+                                    target: "fbIntro",
+                                    startVal: 2000000,
+                                    endVal: 8526865,
+                                    decimal: 0,
+                                    duration: 1.5
+                                };
+                            </script>
+                            <h1 id="fbIntro" class="jumbo">0</h1>
+                            <h2>total impressions</h2>
+                        </div>
+                        
+                    </div>
+                </article>
+            </section>
+
+            <!-- <article class="point" data-count="1" data-desktop-img="../images/FB-background_solar-eclipse.jpg" data-desktop-ratio="1" data-mobile-img="" data-mobile-ratio="0" data-slug="pacific-northwest-national-laboratory-solar-eclipse" style="">
+                <div class="content-block">
+                    <div class="col span1of2 top number-container">
+                        <div class="number">1</div>
+                    </div>
+                    <div class="col span1of2 top text-container">
+                        <h1>@energygov</h1>
+                        <div class="subtext">
+                            <p><a href="https://www.instagram.com/p/8lULbtrD1z/" target="_blank">impressions</p>
+                        </div>
+                    </div>
+                </div>
+            </article> -->
+        </div>
+
+        <script type="text/javascript">
+            // declare the function for the count
+            // var animatedNumb = new CountUp( target, startVal, endVal, decimal, duration );
+            var animatedNumb = new CountUp( settings.target, settings.startVal, settings.endVal, settings.decimal, settings.duration );
+            // execute the function and output message to console
+            if ( !animatedNumb.error ) { // function ok
+                animatedNumb.start(
+                    console.log( "the number has been logged" )
+                );
+            } else { // function error
+                console.error( animatedNumb.error );
+                // console.log( isNaN(settings.startVal) );
+            }
+        </script>
+    </body>
+</html>
