@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>2017 Energy.gov Digital Accomplishments</title>
         <meta name="description" content="Social media milestones and achievements for the main DOE accounts">
-        <link href="css/style.css" rel="stylesheet" type="text/css">
+
         <!-- Object Fit polyfill -->
         <script type="text/javascript" src="https://unpkg.com/object-fit-images/dist/ofi.min.js"></script>
         <!-- Lazy Load images -->
@@ -21,21 +21,13 @@
         <script type="text/javascript" src="js/uswds.min.js"></script>
         <!-- Countup.js -->
         <script type="text/javascript" src="js/countUp.js"></script>
-
         
+        <!-- CUSTOM CODE -->
+        <script type="text/javascript" src="js/index.js"></script>
+        <link href="css/style.css" rel="stylesheet" type="text/css">
     </head>
-    <body>
-        <h1 id="hidden">0</h1>
-        <script type="text/javascript"> 
-            settings = {
-                target: "hidden",
-                startVal: 4000,
-                endVal: 7000,
-                decimal: 0,
-                duration: 4
-            };
-        </script>
 
+    <body>
         <div id="content">
             <!-- <section id='intro' class="jarallax">
                 <img class="jarallax-img" src="images/site-intro.svg" alt="Introduction"/>
@@ -52,16 +44,20 @@
                 <article class="panel-table">
                     <div class="panel-table-cell">
                         <div>
-                            <script type="text/javascript"> 
-                                settings = {
-                                    target: "fbIntro",
-                                    startVal: 2000000,
-                                    endVal: 8526865,
-                                    decimal: 0,
-                                    duration: 1.5
-                                };
-                            </script>
-                            <h1 id="fbIntro" class="jumbo">0</h1>
+                            <h1 id="impressions_1" class="counter" animatedNumb data-startval="2000000" data-endval="8526865" data-decimal="0" data-duration="0.75">0</h1>
+                            <h2>total impressions</h2>
+                        </div>
+                        
+                    </div>
+                </article>
+            </section>
+
+            <section class="jarallax">
+                <img class="jarallax-img" src="images/FB-background_solar-eclipse.jpg" alt="Background for the impressions on FB"/>
+                <article class="panel-table">
+                    <div class="panel-table-cell">
+                        <div>
+                            <h1 id="impressions_2" class="counter" animatedNumb data-startval="2000000" data-endval="24496610" data-decimal="0" data-duration="2.5">0</h1>
                             <h2>total impressions</h2>
                         </div>
                         
@@ -83,20 +79,5 @@
                 </div>
             </article> -->
         </div>
-
-        <script type="text/javascript">
-            // declare the function for the count
-            // var animatedNumb = new CountUp( target, startVal, endVal, decimal, duration );
-            var animatedNumb = new CountUp( settings.target, settings.startVal, settings.endVal, settings.decimal, settings.duration );
-            // execute the function and output message to console
-            if ( !animatedNumb.error ) { // function ok
-                animatedNumb.start(
-                    console.log( "the number has been logged" )
-                );
-            } else { // function error
-                console.error( animatedNumb.error );
-                // console.log( isNaN(settings.startVal) );
-            }
-        </script>
     </body>
 </html>
