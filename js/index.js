@@ -1,20 +1,14 @@
-/* parallax function */ // requires jquery
-/*$("section.parallax").css('background', function () {
-    var bg = ('url(' + $(this).data("image-src") + ') no-repeat center fixed');
-    return bg;
-    console.log(bg);
-});*/
-
 /* counter function */
-window.onload = function() {
+$(document).ready ( function() {
 	// find all elements with counter class
 	var targetList = document.querySelectorAll('.counter');
-	// set variable to count objects
-	var i = 0;
-	do {
-		// get target element id
-		var targetID = targetList[i].id;
-		// get target element counter parameters
+
+	// loop through all target objects in array
+	jQuery.each( targetList, function( i, val ) {
+        // get target element id
+        targetID = val.id;
+        // console.log(targetID);
+        // get target element counter parameters
 		var params = document.getElementById( targetID );
 
 		// declare the function for the count
@@ -26,7 +20,18 @@ window.onload = function() {
 	        console.error( animatedNumb.error );
 	        // console.log( isNaN(settings.startVal) );
 	    }
-		i++;
-	}
-	while ( i <= targetList.length );
-}
+    });
+
+});
+
+/* parallax function */ // requires jquery
+$('section.parallax').css( 'background', function () {
+    var bg = ( 'url(' + $(this).data( 'image-src' ) + ') no-repeat center fixed' );
+    return bg;
+});
+
+/* Scroll functions */
+$(window).scroll(function(){
+	// fade the title when user scrolls down
+	$('.title').css('opacity', 1 - $(window).scrollTop() / 100);
+});
