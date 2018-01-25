@@ -58,17 +58,17 @@ $(document).ready ( function() {
 		}*/
 		console.log ( "INDEX: " + index +  " PIN: " + pin + " brand: " + b + " offset: " + t + " height: " + h );
 		// declare the function for the scroll trigger
-		if ( t < $(window).scrollTop() < h ) {
+		if ( t < $(window).scrollTop() < h + $(window).scrollTop() ) {
 			var sectionID = new ScrollMagic.Scene({
 				triggerElement: b,
 				duration: h,
 				// offset: 0
-				offset: t + 60
+				offset: h + 60
 			})
 			.setPin( b, {
 				pushFollowers: true
 			})		
-			// .setClassToggle( b, "show" ) // add class toggle
+			.setClassToggle( b, "show" ) // add class toggle
 			.addIndicators() // add trigger indicators (requires plugin)
 			.addTo(controller);
 		} else {

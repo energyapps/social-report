@@ -206,13 +206,14 @@ section {
 ****/
 .section {
     min-height: 10rem;
+    /*position: initial;*/
 }
 
 .brand  {
 	display: none;
 	height: 100px;
 	left: 50px;
-	position: fixed;
+	/*position: relative;*/
 	/*visibility: hidden;*/
 	top: 0;
 	width: 100px;
@@ -222,12 +223,12 @@ section {
 .show {
     display: block;
     /*visibility: visible;*/
-     -webkit-animation-name: revealLogo;
-     animation-name: revealLogo;
-     -webkit-animation-duration: 2s;
-     animation-duration: 2s;
-     -webkit-animation-fill-mode: both;
-     animation-fill-mode: both;
+    -webkit-animation-name: revealLogo;
+    animation-name: revealLogo;
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
 }
 
 @-webkit-keyframes revealLogo {
@@ -373,4 +374,4 @@ section {
      .content-block {
          width: 100%;
     }
-}*/
+}*
