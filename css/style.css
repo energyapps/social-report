@@ -210,6 +210,10 @@ section {
     /*position: static;*/
 }
 
+.logo-container { 
+    height: 0; 
+}
+
 .brand  {
 	/*display: none;*/
 	height: 100px;
