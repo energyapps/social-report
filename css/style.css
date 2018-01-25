@@ -1,44 +1,62 @@
+body, html {
+    height: 100%;
+    width: 100%;
+}
+
 #content {
      position: relative;
-    /*background-repeat: no-repeat;
-     background-size: cover;
-     background-image: linear-gradient(to bottom, #ff4b00, #ff4d74, #c56bee, #00b5ff, #00ac00, #ffba00, #ff8239) */
-}
+ }
 
 section {
      display: block;
      clear: both;
+     height: 100vh;
      vertical-align: top;
 }
- 
-.center {
-     text-align: center ;
+
+.parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
 }
- 
+
+.center {
+	height: 100%;
+	text-align: center;
+}
+
 .content-block {
-     width: 90%;
-     max-width: 1008px;
+	height: 100%;
+     width: 100vw;
      margin-left: auto;
      margin-right: auto;
 }
 
+/*.block {
+	position: relative;
+	width: 100%;
+	opacity: 1;
+}*/
+
 /***
-**** INTRODUCTION && TITLE BLOCK 
+**** INTRODUCTION && TITLE BLOCK
 ***/
 #intro, #outro {
+     height: calc(100vh - 60px);
      position: relative;
      width: 100%;
-     height: calc(100vh - 60px);
 }
 
-#intro section, #outro section, #intro .content-block, #outro .content-block {
+/*#intro section, #outro section, #intro .content-block, #outro .content-block {
      position: relative;
      height: 100%;
 }
- 
+
 #intro section, #outro section {
      overflow: hidden;
-}
+}*/
 
 #intro:after, #outro:after {
      height: 60px;
@@ -59,9 +77,12 @@ section {
 #intro:before {
      content: '';
      display: block;
-     background-color: #61AD00;
+     background-color: rgba(97, 173, 0, .5);
+     background-image: url( "../images/2017_Total_Solar_Eclipse_(NHQ201708210100).jpg" );
+     background-repeat:  no-repeat;
+     background-size: cover;
      position: absolute;
-     width: 100%;
+     width: 100vw;
      height: 100vh;
      left: 0;
      top: 0;
@@ -74,54 +95,53 @@ section {
 }
 
 #intro:after {
-     position: absolute;
-     left: 0;
-     top: 100%;
-     content: 'Keep Those Fingers Scrolling';
+	color: #fff;
+	content: 'Scroll down';
+	position: absolute;
+	left: 0;
+	top: 100%;
+	background-color: rgba(97, 173, 0, .25);
 }
 
-#outro:after {
+/*#outro:after {
      position: absolute;
      left: 0;
      top: -60px;
      content: 'We Did it, Fam';
-}
+}*/
 
 .touch#intro {
      height: calc(100vh - (60px + 64px));
 }
 
 /* MAIN TITLE */
-#intro .title, #outro .title {
+.title {
      color: #fff;
      font-family: "Karla", "Helvetica", sans-serif;
+     font-size: 6vw;
      font-weight: 400;
      height: 1.2em;
-     position: absolute;
-     margin: auto;
-     top: 0;
+     line-height: 1.1;
+     margin: auto 10% auto 33%;
+     position: fixed;
+     text-align: left;
+     top: 9%;
      bottom: 0;
      -webkit-font-smoothing: antialiased;
-}
-
-#intro .title {
-     margin-left: 30%;
-     top: 32%;
+     /* transitions */
+     -webkit-transition: all .02s ease-in-out;
+     -moz-transition: all .02s ease-in-out;
+     -ms-transition: all .02s ease-in-out;
+     -o-transition: all .02s ease-in-out;
+     transition: all .02s ease-out;
 }
 
 #outro .title {
-     margin-left: 31%;
-     top: 23%;
-}
- 
-/* BACKGROUND */
-.knockout {
-     height: 100%;
-     background-repeat: no-repeat;
-     background-position: center center;
-     background-size: cover;
+    /* margin-left: 31%;
+     top: 23%;*/
 }
 
+/* BACKGROUND */
 #intro .knockout, #outro .knockout {
      transition: background-color 0.25s linear;
      position: relative;
@@ -134,7 +154,16 @@ section {
 #outro .knockout {
      /*background-image: url("https://static.mailchimp.com/report-2015/desktop/outro.svg");*/
 }
- 
+
+.knockout {
+	background-attachment: fixed;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 150%;
+	height: 100%;
+	width: 100%;
+}
+
 #intro .knockout:before, #outro .knockout:before, #intro .knockout:after, #outro .knockout:after {
      content: '';
      display: block;
@@ -144,17 +173,17 @@ section {
      height: 100%;
      top: 0;
 }
- 
+
 #intro .knockout:before, #outro .knockout:before {
      right: 99%;
 }
- 
+
 #intro .knockout:after, #outro .knockout:after {
      left: 99%;
 }
 
 /***
-**** SCROLL 
+**** SCROLL
 ****/
 .scrolling#intro:after, .scrolling#outro:after {
      opacity: 0;
@@ -164,10 +193,118 @@ section {
      opacity: 1;
 }
 
+#social-brands {
+	height: 100px;
+	width: 100px;
+	position: relative;
+	top: 50px;
+	left: 50px;
+}
+
 /***
-**** MEDIA QUERIES 
+**** SECTIONS BY BRAND
 ****/
-@media screen and (min-width: 520px) {
+.section {
+    min-height: 10rem;
+}
+
+.brand  {
+	display: none;
+	height: 100px;
+	left: 50px;
+	position: fixed;
+	/*visibility: hidden;*/
+	top: 0;
+	width: 100px;
+	z-index: 1000;
+}
+
+.show {
+    display: block;
+    /*visibility: visible;*/
+     -webkit-animation-name: revealLogo;
+     animation-name: revealLogo;
+     -webkit-animation-duration: 2s;
+     animation-duration: 2s;
+     -webkit-animation-fill-mode: both;
+     animation-fill-mode: both;
+}
+
+@-webkit-keyframes revealLogo {
+     0% {
+         opacity: 0;
+         -webkit-transform: translate3d(0, 2000px, 0);
+         transform: translate3d(0, 2000px, 0);
+    }
+     100% {
+         opacity: 1;
+         -webkit-transform: none;
+         transform: none;
+    }
+}
+ @keyframes revealLogo {
+     0% {
+         opacity: 0;
+         -webkit-transform: translate3d(0, 2000px, 0);
+         transform: translate3d(0, 2000px, 0);
+    }
+     100% {
+         opacity: 1;
+         -webkit-transform: none;
+         transform: none;
+    }
+}
+
+/*.brand.show {
+	display: block;
+	visibility: visible;
+}
+*/
+/***
+**** PERCENTAGE PANELS
+****/
+
+.percent {
+	font-family: "Karla", "Helvetica", sans-serif;
+	font-size: 10vmax;
+	font-weight: 700;
+}
+
+/***
+**** MEDIA QUERIES
+****/
+
+@media (min-width: 768px) {
+	#intro .title {
+		font-size: 5vw;
+		margin-left: 34%;
+	}
+}
+
+@media (min-width: 1040px) {
+	#intro .knockout {
+		/*background-position: center 45%;*/
+		background-size: cover;
+	}
+
+	#intro .title {
+		font-size: 3.5vw;
+		margin-left: 39%;
+	}
+}
+
+/*@media screen and (min-width: 1040px) and (max-width: 1200px) {
+	#intro .knockout {
+		background-position: center 45%;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	#intro .knockout {
+		background-position: center -100vh;
+	}
+}*/
+/*@media screen and (min-width: 520px) {
      #intro:after, #outro:after {
          font-size: 18px;
     }
@@ -182,12 +319,12 @@ section {
     }
 
     #intro .title {
-         /*margin-left:10.25%;
-         top: -3.6%;*/
+         margin-left:10.25%;
+         top: -3.6%;
     }
 
     #intro .knockout {
-         background-image: url("../images/site-intro.svg") 
+         background-image: url("../images/site-intro.svg")
     }
 }
 
@@ -212,11 +349,11 @@ section {
     }
 
     .touch#intro {
-         height:calc(100vh) 
+         height: calc(100vh)
     }
 
     .touch#intro .knockout {
-         background-image: url("https://static.mailchimp.com/report-2015/desktop/intro.svg") 
+         background-image: url("https://static.mailchimp.com/report-2015/desktop/intro.svg")
     }
 }
 
@@ -234,6 +371,6 @@ section {
 
 @media screen and (max-width: 1120px) {
      .content-block {
-         width:100%;
+         width: 100%;
     }
-}
+}*/
