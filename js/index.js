@@ -1,7 +1,7 @@
 $(document).ready ( function() {
     // init ScrollMagic controller
 	var controller = new ScrollMagic.Controller({
-		loglevel: 3, // console log
+		loglevel: 0, // console log
 		globalSceneOptions: { // default scene settings
 			triggerHook: 'onCenter',
 			offset: 20,
@@ -22,37 +22,39 @@ $(document).ready ( function() {
         // get target element counter parameters
 		var sParams = document.getElementById( sectionID );
 		var index = $(sParams).index();
-		var pin = '#' + sectionID;
+		// var pin = '#' + sectionID;
 		var b = '#' + $(sParams).data("brand");
 		var t = $(sParams).eq(index - 1 * index).offset().top;
 		var h = $(sParams).height();
+		// console.log ( "INDEX: " + index + " TRIGGER: " + b + " OFFSET: " + t + " HEIGHT: " + h );
 
-		// console.log ( "INDEX: " + index +  " PIN: " + pin + " TRIGGER: " + b + " OFFSET: " + t + " HEIGHT: " + h );
-		// console.log ( controller.info() );
-		// declare the function for the scroll trigger
-		// if ( t < $(window).scrollTop() < h + $(window).scrollTop() ) {
-			// create scroll scene
-			var sectionScene = new ScrollMagic.Scene({
-				triggerElement: b,
-				duration: h,
-				// offset: 0
-				offset: h + 60
-			})
-			.setPin( b, {
-				pushFollowers: false
-			})		
-			.setClassToggle( b, "show" ) // add class toggle
-			.addIndicators() // add trigger indicators (requires plugin)
-			.addTo(controller);
+		// create new scroll scene for each section
+		var sectionScene = new ScrollMagic.Scene({
+			triggerElement: b,
+			duration: h,
+			offset: h + 60
+		})
+		.setPin( b, {
+			pushFollowers: false
+		})		
+		.setClassToggle( b, "show" ) // add class toggle
+		.addIndicators() // add trigger indicators (requires plugin)
+		.addTo(controller);
 
-			// loop through all counters
-			jQuery.each( counterList, function( i, val ) {
-		        // get target element id
-		        counterID = val.id;
-		        // console.log(counterID);
-		        // get target element counter parameters
-				var cParams = document.getElementById( counterID );
+		// loop through all counters
+		jQuery.each( counterList, function( i, val ) {
+	        // get target counter id
+	        counterID = val.id;
+	        // get target counter parameters
+			var cParams = document.getElementById( counterID );
 
+			// set variable for parent ID
+			var parent = $( cParams ).parentsUntil( $("#content"), ".section" );
+			var parentTop = $( parent ).offset().top;
+			console.log ( "ELEMENT TOP: " + parentTop + " WINDOW TOP: " + $(window).scrollTop() );
+			/// USE SCROLLMAGIC HERE TO CONTINUOUSLY GET WINDOW SCROLL LOCATION
+
+			// if ( $(window).scrollTop() == parentTop ) {
 				// declare the function for the count
 			    var animatedNumb = new CountUp( counterID , cParams.dataset.startval, cParams.dataset.endval, 0, cParams.dataset.duration );
 			    //execute the function and output message to console
@@ -62,7 +64,9 @@ $(document).ready ( function() {
 			        console.error( animatedNumb.error );
 			        // console.log( isNaN(settings.startVal) );
 			    }
-		    });
+			// }
+	    });
+		
 		// } else {
 		// 	controller.removeScene(sectionScene);
 		// }

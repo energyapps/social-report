@@ -34,12 +34,6 @@ section {
      margin-right: auto;
 }
 
-/*.block {
-	position: relative;
-	width: 100%;
-	opacity: 1;
-}*/
-
 /***
 **** INTRODUCTION && TITLE BLOCK
 ***/
@@ -48,15 +42,6 @@ section {
      position: relative;
      width: 100%;
 }
-
-/*#intro section, #outro section, #intro .content-block, #outro .content-block {
-     position: relative;
-     height: 100%;
-}
-
-#intro section, #outro section {
-     overflow: hidden;
-}*/
 
 #intro:after, #outro:after {
      height: 60px;
@@ -206,8 +191,7 @@ section {
 ****/
 .section {
     margin: 0;
-    min-height: 5rem;
-    /*position: static;*/
+    min-height: 2rem;
 }
 
 .logo-container { 
@@ -215,18 +199,14 @@ section {
 }
 
 .brand  {
-	/*display: none;*/
 	height: 100px;
 	left: 50px;
-	/*position: relative;*/
 	visibility: hidden;
-	/*top: 0;*/
 	width: 100px;
 	z-index: 1000;
 }
 
 .show {
-    /*position: relative;*/
     -webkit-animation-name: slideUp;
     animation-name: slideUp;
     -webkit-animation-duration: 0.5s;
@@ -261,7 +241,6 @@ section {
 }
 
 .brand.show {
-	/*display: block;*/
 	visibility: visible;
 }
 
@@ -270,7 +249,7 @@ section {
 ****/
 
 .percent {
-	font-family: "Karla", "Helvetica", sans-serif;
+	font-family: "Work Sans", "Helvetica", sans-serif;
 	font-size: 10vmax;
 	font-weight: 700;
 }
