@@ -13,21 +13,28 @@
         <!-- Lazy Load images -->
         <script type="text/javascript" src="https://unpkg.com/object-fit-images/dist/ofi.min.js"></script>
         <!-- Jarallax -->
-        <link href="css/jarallax.css" rel="stylesheet">
+        <link type="text/css" href="css/jarallax.css" rel="stylesheet">
         <script type="text/javascript" src="js/jarallax.min.js"></script>
         <script type="text/javascript" src="js/jarallax-video.min.js"></script>
         <script type="text/javascript" src="js/jarallax-element.min.js"></script>
         <!-- USWDS -->
-        <link href="css/uswds.css" rel="stylesheet">
+        <link type="text/css" href="css/uswds.css" rel="stylesheet">
         <script type="text/javascript" src="js/uswds.min.js"></script>
         <!-- Countup.js -->
         <script type="text/javascript" src="js/countUp.js"></script>
+        <!-- ScrollMagic -->
+        <script type="text/javascript" src="js/lib/greensock/TweenMax.min.js"></script>
+        <script type="text/javascript" src="js/scrollmagic/uncompressed/ScrollMagic.js"></script>
+        <script type="text/javascript" src="js/scrollmagic/uncompressed/plugins/jquery.ScrollMagic.js"></script>
+		<script type="text/javascript" src="js/scrollmagic/uncompressed/plugins/animation.gsap.js"></script>
+        <script type="text/javascript" src="js/scrollmagic/uncompressed/plugins/debug.addIndicators.js"></script>
 
         <!-- Custom -->
         <link href="css/style.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="js/index.js"></script>
     </head>
     <body>
+    	<!-- <div id="indicators" style:"height:100px;"></div> -->
         <div id="content">
             <section id='intro'>
                 <article class='center'>
@@ -39,46 +46,58 @@
                 </article>
             </section>
 
-            <section id="section-1" class="parallax" style="background-image:url(images/FB-background_solar-eclipse.jpg);">
-                <article class="panel-table">
-                    <div class="panel-table-cell">
-                        <div>
-                            <h1 id="counter_1" class="counter" animatedNumb data-startval="2000000" data-endval="8526865" data-duration="0.75">0</h1>
-                            <h2>total impressions</h2>
-                        </div>
+	        <div id="stats-fb" class="parallax">
+            	<img id="facebook" class="brand" width="50" width="50" src="https://unpkg.com/simple-icons@latest/icons/facebook.svg" />
 
-                    </div>
-                </article>
-            </section>
+	            <section id="section-1" class="parallax" style="background-image:url(images/FB-background_solar-eclipse.jpg);" data-brand="facebook">
+	                <article class="panel-table">
+	                    <div class="panel-table-cell">
+	                        <div>
+	                            <h1 id="counter_1" class="counter" animatedNumb data-startval="2000000" data-endval="8526865" data-duration="0.75">0</h1>
+	                            <h2>total impressions</h2>
+	                        </div>
+	                    </div>
+	                </article>
+	            </section>
 
-            <section id="section-2" class="parallax" style="background-image:url(images/solar.jpg);">
+				<section id="section-2" data-brand="facebook">
+	                <article class="panel-table">
+	                    <div class="usa-grid-one-fourth panel-table-cell">
+	                        <svg height="100" width="100">
+								<circle cx="50%" cy="50%" r="50" stroke="black" stroke-width="1" fill="#61AD00" />
+							</svg>
+	                    </div>
+	                    <div class="usa-grid-one-fourth panel-table-cell">
+	                        <svg height="111" width="111">
+								<circle cx="50%" cy="50%" r="55" stroke="black" stroke-width="1" fill="#61AD00" />
+							</svg>
+	                    </div>
+	                    <div class="usa-grid-one-half panel-table-cell">
+	                        <h1 class="percents"><span id="counter_3" class="counter" animatedNumb data-startval="0" data-endval="11" data-duration="0.5">0</span>%</h1>
+	                        <h4>increase from the previous year</h4>
+	                    </div>
+	                </article>
+	            </section>
+	        </div>
+
+            <section id="section-3" class="parallax" style="background-image:url(images/solar.jpg);" data-brand="twitter">
                 <article class="panel-table">
                     <div class="panel-table-cell">
                         <div>
                             <h1 id="counter_2" class="counter" animatedNumb data-startval="2000000" data-endval="24567892" data-duration="2.5">0</h1>
                             <h2>total impressions</h2>
                         </div>
-
                     </div>
                 </article>
             </section>
 
-            <!-- <article class="point" data-count="1" data-desktop-img="../images/FB-background_solar-eclipse.jpg" data-desktop-ratio="1" data-mobile-img="" data-mobile-ratio="0" data-slug="pacific-northwest-national-laboratory-solar-eclipse" style="">
-                <div class="content-block">
-                    <div class="col span1of2 top number-container">
-                        <div class="number">1</div>
-                    </div>
-                    <div class="col span1of2 top text-container">
-                        <h1>@energygov</h1>
-                        <div class="subtext">
-                            <p><a href="https://www.instagram.com/p/8lULbtrD1z/" target="_blank">impressions</p>
-                        </div>
-                    </div>
-                </div>
-            </article> -->
+            <!-- <div id="social-brands">
+            	<img id="facebook" class="brand" width="50" width="50" src="https://unpkg.com/simple-icons@latest/icons/facebook.svg" />
+            	<img id="twitter" class="brand" width="50" width="50" src="https://unpkg.com/simple-icons@latest/icons/twitter.svg" />
+            	<img id="instagram" class="brand" width="50" width="50" src="https://unpkg.com/simple-icons@latest/icons/instagram.svg" />
+            	<img id="linkedin" class="brand" width="50" width="50" src="https://unpkg.com/simple-icons@latest/icons/linkedin.svg" />
+            	<img id="youtube" class="brand" width="50" width="50" src="https://unpkg.com/simple-icons@latest/icons/youtube.svg" />
+            </div> -->
         </div>
     </body>
-    <script type="text/javascript">
-
-    </script>
 </html>

@@ -196,6 +196,40 @@ section {
      opacity: 1;
 }
 
+#social-brands {
+	height: 100px;
+	width: 100px;
+	position: relative;
+	top: 50px;
+	left: 50px;
+}
+
+.brand  {
+	/*display: none;*/
+	height: 50px;
+	left: 25px;
+	position: fixed;
+	visibility: hidden;
+	top: 25px;
+	width: 50px;
+	z-index: 1000;
+}
+
+.brand.show {
+	/*display: block;*/
+	visibility: visible;
+}
+
+/***
+**** PERCENTAGE PANELS
+****/
+
+.percent {
+	font-family: "Karla", "Helvetica", sans-serif;
+	font-size: 10vmax;
+	font-weight: 700;
+}
+
 /***
 **** MEDIA QUERIES
 ****/
