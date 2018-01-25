@@ -5,10 +5,7 @@ body, html {
 
 #content {
      position: relative;
-    /*background-repeat: no-repeat;
-     background-size: cover;
-     background-image: linear-gradient(to bottom, #ff4b00, #ff4d74, #c56bee, #00b5ff, #00ac00, #ffba00, #ff8239) */
-}
+ }
 
 section {
      display: block;
@@ -50,7 +47,6 @@ section {
      height: calc(100vh - 60px);
      position: relative;
      width: 100%;
-	max-width: 1008px;
 }
 
 /*#intro section, #outro section, #intro .content-block, #outro .content-block {
@@ -84,9 +80,9 @@ section {
      background-color: rgba(97, 173, 0, .5);
      background-image: url( "../images/2017_Total_Solar_Eclipse_(NHQ201708210100).jpg" );
      background-repeat:  no-repeat;
-     background-size: contain;
+     background-size: cover;
      position: absolute;
-     width: 100%;
+     width: 100vw;
      height: 100vh;
      left: 0;
      top: 0;
@@ -100,10 +96,11 @@ section {
 
 #intro:after {
 	color: #fff;
-     content: 'Scroll down';
-     position: absolute;
-     left: 0;
-     top: 100%;
+	content: 'Scroll down';
+	position: absolute;
+	left: 0;
+	top: 100%;
+	background-color: rgba(97, 173, 0, .25);
 }
 
 /*#outro:after {
@@ -204,22 +201,65 @@ section {
 	left: 50px;
 }
 
+/***
+**** SECTIONS BY BRAND
+****/
+.section {
+    min-height: 10rem;
+}
+
 .brand  {
-	/*display: none;*/
-	height: 50px;
-	left: 25px;
+	display: none;
+	height: 100px;
+	left: 50px;
 	position: fixed;
-	visibility: hidden;
-	top: 25px;
-	width: 50px;
+	/*visibility: hidden;*/
+	top: 0;
+	width: 100px;
 	z-index: 1000;
 }
 
-.brand.show {
-	/*display: block;*/
-	visibility: visible;
+.show {
+    display: block;
+    /*visibility: visible;*/
+     -webkit-animation-name: revealLogo;
+     animation-name: revealLogo;
+     -webkit-animation-duration: 2s;
+     animation-duration: 2s;
+     -webkit-animation-fill-mode: both;
+     animation-fill-mode: both;
 }
 
+@-webkit-keyframes revealLogo {
+     0% {
+         opacity: 0;
+         -webkit-transform: translate3d(0, 2000px, 0);
+         transform: translate3d(0, 2000px, 0);
+    }
+     100% {
+         opacity: 1;
+         -webkit-transform: none;
+         transform: none;
+    }
+}
+ @keyframes revealLogo {
+     0% {
+         opacity: 0;
+         -webkit-transform: translate3d(0, 2000px, 0);
+         transform: translate3d(0, 2000px, 0);
+    }
+     100% {
+         opacity: 1;
+         -webkit-transform: none;
+         transform: none;
+    }
+}
+
+/*.brand.show {
+	display: block;
+	visibility: visible;
+}
+*/
 /***
 **** PERCENTAGE PANELS
 ****/
