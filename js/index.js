@@ -48,28 +48,6 @@ $(document).ready ( function() {
 		.addTo(controller);
 });
 
-
-
-/** BRAND LOGOS
-*** execute scrollmagic.js scene on load
-**/
-/*window.onLoad = function() {
-	// create a scene
-	var scene1 = new ScrollMagic.Scene({
-		triggerElement: $( '#section-1' ),
-		triggerHook: 'onLeave', // start this scene when element in view
-	    // duration: 100,    // the scene should last for a scroll distance of 100px
-	    // offset: 300        // start this scene after scrolling for 50px
-	    reverse: true
-	})
-	.setClassToggle( $( '.brand' ), "show" ) // add class toggle
-	// .setPin( "#section-1" ) // pins the element for the the scene's duration
-	// .addIndicators({name: "first scene", parent: "#indicators"})
-	.addTo( controller ); // assign the scene to the controller
-
-	console.log ( scene1 );
-}*/
-
 /* Parallax function */ // requires jquery
 $( 'section.parallax' ).css( 'background', function () {
     var bg = ( 'url(' + $( this ).data( 'image-src' ) + ') no-repeat center fixed' );
