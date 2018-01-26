@@ -16,15 +16,23 @@
 	"command_palette":
 	{
 		"height": 392.0,
-		"last_filter": "pac",
+		"last_filter": "p",
 		"selected_items":
 		[
+			[
+				"p",
+				"Package Control: Install Package"
+			],
+			[
+				"beau",
+				"HTMLBeautify"
+			],
 			[
 				"pac",
 				"Package Control: Install Package"
 			]
 		],
-		"width": 428.0
+		"width": 412.0
 	},
 	"console":
 	{
@@ -44,6 +52,19 @@
 	},
 	"file_history":
 	[
+		"/Users/gisselle.frias/Sites/social-report/js/demo.js",
+		"/Users/gisselle.frias/Sites/social-report/js/countUp.js",
+		"/Users/gisselle.frias/Sites/social-report/scripts/site-d70e95cf.js",
+		"/Users/gisselle.frias/Sites/social-report/css/uswds.css",
+		"/Users/gisselle.frias/Sites/social-report/css/site-9c6bc636.css",
+		"/Users/gisselle.frias/Sites/social-report/css/jarallax.css",
+		"/Users/gisselle.frias/Sites/social-report/css/style.css",
+		"/Users/gisselle.frias/Sites/social-report/css/style-old.css",
+		"/Users/gisselle.frias/Sites/social-report/scripts/init-a127bf57.js",
+		"/Users/gisselle.frias/Desktop/config.inc.php",
+		"/Users/gisselle.frias/Sites/phpMyAdmin/config.inc.php",
+		"/Users/gisselle.frias/node_modules/uswds/package.json",
+		"/Users/gisselle.frias/Downloads/bbgRedesign-master/Gruntfile.js",
 		"/Users/gisselle.frias/Sites/untitled.php",
 		"/Users/gisselle.frias/Sites/playground/index.html",
 		"/Users/gisselle.frias/Sites/playground/testing.php"
@@ -119,7 +140,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 0.0
+		"height": 30.0
 	},
 	"output.find_results":
 	{

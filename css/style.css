@@ -28,7 +28,7 @@ h6 {
 section {
      display: block;
      clear: both;
-     height: 100vh;
+     /* height: 100vh; */
      vertical-align: top;
 }
 

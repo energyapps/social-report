@@ -8,6 +8,10 @@
         <meta name="description" content="Social media milestones and achievements for the main DOE accounts">
         <!-- JQuery -->
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Tabletop -->
+        <script type="text/javascript" src="js/tabletop/tabletop.js"></script>
+        <!-- D3 -->
+        <script type="text/javascript" src="js/d3/d3.js"></script>
         <!-- Object Fit polyfill -->
         <script type="text/javascript" src="https://unpkg.com/object-fit-images/dist/ofi.min.js"></script>
         <!-- Lazy Load images -->
@@ -63,21 +67,17 @@
 
 				<section id="section-2">
 	                <article class="panel-table">
-	                    <div class="usa-grid-one-fourth panel-table-cell">
-	                        <svg height="100" width="100">
-								<circle cx="50%" cy="50%" r="50" stroke="black" stroke-width="1" fill="#61AD00" />
-							</svg>
-	                    </div>
-	                    <div class="usa-grid-one-fourth panel-table-cell">
-	                        <svg height="111" width="111">
-								<circle cx="50%" cy="50%" r="55" stroke="black" stroke-width="1" fill="#61AD00" />
-							</svg>
-	                    </div>
-	                    <div class="usa-grid-one-half panel-table-cell">
-	                        <h2 class="percent"><span id="counter_3" animatedNumb data-startval="0" data-endval="11" data-duration="0.5">0</span>%</h2>
-	                        <h4>increase from the previous year</h4>
-	                    </div>
-	                </article>
+                        <div class="usa-grid-two-thirds panel-table-cell">
+                            <svg height="400" width="100%">
+                                <circle cx="75" cy="50%" stroke="black" stroke-width="1" fill="#61AD00"></circle>
+                                <circle cx="200" cy="50%" stroke="black" stroke-width="1" fill="#61AD00"></circle>
+                            </svg>
+                        </div>
+                        <div class="usa-grid-one-third panel-table-cell">
+                            <h2 class="percent"><span id="counter_3" animatednumb="" data-startval="0" data-endval="11" data-duration="0.5">0</span>%</h2>
+                            <h4>increase from the previous year</h4>
+                        </div>
+                    </article>
 	            </section>
 	        </div>
 

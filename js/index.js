@@ -1,4 +1,16 @@
+// load other JS via jQuery
+$.getScript( 'js/data.js');
+
 $(document).ready ( function() {
+	console.log( "Page loaded. Jquery is running. Now, do stuff.");
+
+    // load spreadsheet data via tabletopJS
+    loadSpreadsheet();
+
+    var circles = $(d3).selectAll("circle");
+    console.log ( circles );
+    // circle.attr("r", 100);
+
     // init ScrollMagic controller
 	var controller = new ScrollMagic.Controller({
 		loglevel: 0, // console log
@@ -51,7 +63,7 @@ $(document).ready ( function() {
 			// set variable for parent ID
 			var parent = $( cParams ).parentsUntil( $("#content"), ".section" );
 			var parentTop = $( parent ).offset().top;
-			console.log ( "ELEMENT TOP: " + parentTop + " WINDOW TOP: " + $(window).scrollTop() );
+			// console.log ( "ELEMENT TOP: " + parentTop + " WINDOW TOP: " + $(window).scrollTop() );
 			/// USE SCROLLMAGIC HERE TO CONTINUOUSLY GET WINDOW SCROLL LOCATION
 
 			// if ( $(window).scrollTop() == parentTop ) {
