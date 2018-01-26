@@ -1,6 +1,24 @@
-body, html {
+@import url('https://fonts.googleapis.com/css?family=Karla:400,400i,700,700i');
+
+html {
+	color: #ffffff;
+  	font-family: "Karla", "Helvetica", "Arial", sans-serif;
+  	font-size: 10px;
+}
+
+html, body {
     height: 100%;
     width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Karla", "Helvetica", "Arial", sans-serif;
+	font-weight: 700;
 }
 
 #content {
@@ -101,8 +119,6 @@ section {
 
 /* MAIN TITLE */
 .title {
-     color: #fff;
-     font-family: "Karla", "Helvetica", sans-serif;
      font-size: 6vw;
      font-weight: 400;
      height: 1.2em;
@@ -194,16 +210,23 @@ section {
     min-height: 2rem;
 }
 
-.logo-container { 
-    height: 0; 
+.logo-container {
+	/*background-color: white;*/
+    height: 0;
 }
 
 .brand  {
+	fill: #ffffff;
 	height: 100px;
 	left: 50px;
 	visibility: hidden;
 	width: 100px;
 	z-index: 1000;
+}
+
+#stats-fb .brand {
+	background-color: #000000;
+	border-radius: 6px;
 }
 
 .show {
@@ -243,15 +266,20 @@ section {
 .brand.show {
 	visibility: visible;
 }
+/* COUNTERS */
+.counter {
+	font-size: 8vmax;
+	background-color:  green;
+	padding: 2rem 3rem;
+	display: inline-block;
+	margin: 0;
+}
 
-/***
-**** PERCENTAGE PANELS
-****/
-
+/* PERCENTAGE PANELS */
 .percent {
-	font-family: "Work Sans", "Helvetica", sans-serif;
+	/*background-color: transparent;*/
 	font-size: 10vmax;
-	font-weight: 700;
+	/*font-weight: 700;*/
 }
 
 /***
