@@ -1,19 +1,30 @@
-// load other JS via jQuery
-$.getScript( 'js/data.js');
-
 $(document).ready ( function() {
 	console.log( "Page loaded. Jquery is running. Now, do stuff.");
 
-    // load spreadsheet data via tabletopJS
-    loadSpreadsheet();
+    // Google sheets ID
+	// share url: https://docs.google.com/spreadsheets/d/19wQJE6SrUrp3Li_O_507Z2myD7Jpf_XB4r99ajR14TY
+	var public_spreadsheet_url = '19wQJE6SrUrp3Li_O_507Z2myD7Jpf_XB4r99ajR14TY';
 
-    var circles = $(d3).selectAll("circle");
-    console.log ( circles );
-    // circle.attr("r", 100);
+	// function for initializing tabletop
+	function loadSpreadsheet() {
+		// Multisheet version: 
+	    Tabletop.init( { key: public_spreadsheet_url,
+	         callback: showInfo,
+	         wanted: [ "energy_social", "energy_youtube", "s1_social" ], // specifying sheets to load
+	         parseNumbers: true/*,
+	         postProcess: function(element) {
+	            // convert string date to Date date
+	            element["launch_date"] = Date.parse(element["launch_date"]);
+	         }*/
+	     })
+	}
+
+    // load spreadsheet data
+    loadSpreadsheet();
 
     // init ScrollMagic controller
 	var controller = new ScrollMagic.Controller({
-		loglevel: 0, // console log
+		loglevel: 0, // console log level of detail
 		globalSceneOptions: { // default scene settings
 			triggerHook: 'onCenter',
 			offset: 20,
@@ -83,6 +94,45 @@ $(document).ready ( function() {
 		// 	controller.removeScene(sectionScene);
 		// }
     });
+
+    /* D3 data output */
+	function showInfo(data) {
+	    console.log( "Spreadsheet data is loaded." );
+
+	    // assign DOE social stats to a variable
+	    var doeStats = data.energy_social.elements;
+	    // establish current date and year
+	    var today = new Date();
+	    var yyyy = today.getFullYear();   	
+			
+	    // loop through all the doe stats
+	    $(doeStats).each( function( key, media ){
+	    	var mp = "followers-" + media.platform;
+	    	var year = parseInt( media.followers_2016.match(/\d+/) ); // 123456
+	    	console.log (year);
+	    	// find all containers for each svg
+	    	var doeContainer = document.getElementById( mp );
+
+	    	if ( doeContainer != null ) {
+	    		// create svg element
+	    		var createSVG = d3.select( doeContainer ).append("svg")
+					.attr( "width", 200 )
+					.attr( "height", 200 );
+				// create circles within svg
+				var createCircle = createSVG.append("circle")
+					.attr("cx", 25)
+					.attr("cy", 25)
+					.attr("r", 25)
+					.style("fill", "rgba(97, 173, 0, 0.25)" );
+	    		// console.log( doeContainers );
+	    	}
+	    });
+
+	    /* use for secretary account launch date
+	    var launch = media.launch_date;	    	
+			console.log ( launch );
+			*/
+	}
 });
 
 /* Parallax function */ // requires jquery
