@@ -7,7 +7,7 @@ $(document).ready ( function() {
 
 	// function for initializing tabletop
 	function loadSpreadsheet() {
-		// Multisheet version: 
+		// Multisheet version:
 	    Tabletop.init( { key: public_spreadsheet_url,
 	         callback: showInfo,
 	         wanted: [ "energy_social", "energy_youtube", "s1_social" ], // specifying sheets to load
@@ -29,7 +29,7 @@ $(document).ready ( function() {
 			triggerHook: 'onCenter',
 			offset: 20,
 			reverse: true
-		} 
+		}
 	});
 
 	// find all elements with counter class
@@ -59,7 +59,7 @@ $(document).ready ( function() {
 		})
 		.setPin( b, {
 			pushFollowers: false
-		})		
+		})
 		.setClassToggle( b, "show" ) // add class toggle
 		.addIndicators() // add trigger indicators (requires plugin)
 		.addTo(controller);
@@ -89,7 +89,7 @@ $(document).ready ( function() {
 			    }
 			// }
 	    });
-		
+
 		// } else {
 		// 	controller.removeScene(sectionScene);
 		// }
@@ -101,35 +101,69 @@ $(document).ready ( function() {
 
 	    // assign DOE social stats to a variable
 	    var doeStats = data.energy_social.elements;
-	    // establish current date and year
+	    // get all column names
+	    var allCols = data.energy_social.columnNames;
+	    // establish current date and get year
 	    var today = new Date();
-	    var yyyy = today.getFullYear();   	
-			
+	    var yyyy = today.getFullYear();
+	    // create variable for target year cols
+	    var colNames = [];
+	    // loop through all column names and extract only target years
+	    $(allCols).each( function( k, col ) {
+	    	if ( allCols[k] == "followers_" + ( yyyy - 2 ) || allCols[k] == "followers_" + ( yyyy - 1 ) ) {
+	    		colNames.push( allCols[k] );
+	    	}
+	    });
+	    // console.log ( doeStats );
+
+	    // create function to filter stats by target years
+		function filterFollowers( obj, filter ) {
+		  for (prop in obj) {
+		      if ( filter.indexOf(prop) == -1 ) {
+		          delete obj[prop];
+		      }
+		  };
+		  return obj;
+		};
+
 	    // loop through all the doe stats
-	    $(doeStats).each( function( key, media ){
+	    $(doeStats).each( function( key, media ) {
+			// console.log( media );
+	    	// create a variable for the section IDs
 	    	var mp = "followers-" + media.platform;
-	    	var year = parseInt( media.followers_2016.match(/\d+/) ); // 123456
-	    	console.log (year);
 	    	// find all containers for each svg
 	    	var doeContainer = document.getElementById( mp );
 
 	    	if ( doeContainer != null ) {
 	    		// create svg element
 	    		var createSVG = d3.select( doeContainer ).append("svg")
-					.attr( "width", 200 )
-					.attr( "height", 200 );
-				// create circles within svg
+	    			.attr( "id", media.platform );
+	    		// filter out target years only
+	    		var stats = filterFollowers( media, colNames );
+	    		var sKeys = Object.keys(stats);
+
+	    		// var old = stats.years[0]
+	    		// var diff = parseInt( stats[0][1] ) / parseInt( stats[0][0] );
+				console.log(  );
+				// circle: OLD followers
 				var createCircle = createSVG.append("circle")
-					.attr("cx", 25)
-					.attr("cy", 25)
-					.attr("r", 25)
-					.style("fill", "rgba(97, 173, 0, 0.25)" );
-	    		// console.log( doeContainers );
+					.attr( "cx", 25 )
+					.attr( "cy", 50 )
+					.attr( "r", 25 )
+					.style( "fill", "#396900" )
+					.attr( "class", "past" );
+				// circle: NEW followers
+				var createCircle = createSVG.append("circle")
+					.attr( "cx", 100 )
+					.attr( "cy", 50 )
+					.attr( "r", 25 )
+					.style( "fill", "#61AD00" )
+					.attr( "class", "new" );
 	    	}
 	    });
 
 	    /* use for secretary account launch date
-	    var launch = media.launch_date;	    	
+	    var launch = media.launch_date;
 			console.log ( launch );
 			*/
 	}
