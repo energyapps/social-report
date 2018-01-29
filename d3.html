@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Responsive SVG elements</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <style>
+      html {
+        font-family: "Helvetica Neue", Helvetica, arial, sans-serif;
+        font-size: 16px;
+      }
+      body {
+        margin: 0;
+        padding: 1rem;
+      }
+      svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      p {
+        margin: 0 0 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p id="hooray" style="display: none">
+        <b>Hooray!</b> Your browser uses the viewBox attribute's aspect ratio
+        to calculate SVG elements' intrinsic dimensions.
+      </p>
+      <div id="boo" style="display: none">
+        <p>
+          <b>Boo.</b> Your browser doesn't use the viewBox attribute's aspect
+          ratio to calculate SVG elements' intrinsic dimensions. But <i>fear not!</i>
+        </p>
+      </div>
+
+      <svg id="circles" viewBox="0 0 300 100">
+        <circle r="50" cx="50" cy="50" fill="cyan"></circle>
+        <circle r="50" cx="150" cy="50" fill="magenta"></circle>
+        <circle r="50" cx="250" cy="50" fill="yellow"></circle>
+      </svg>
+
+      <svg id="circles" viewBox="0 0 200 200">
+        <circle r="50" opacity=".5" cx="50" cy="50" fill="red"></circle>
+        <circle r="50" opacity=".5" cx="100" cy="100" fill="green"></circle>
+        <circle r="50" opacity=".5" cx="150" cy="150" fill="blue"></circle>
+      </svg>
+    </div>
+  </body>
+  <script>
+(function() {
+  // show the appropriate message
+  if (obeysViewBox()) {
+    d3.select("#hooray").style("display", null);
+    return; // exit if the browser does what we expect it to
+  } else {
+    d3.select("#boo").style("display", null);
+  }
+  /*
+   * Select all of the SVG elements on the page and parse out their viewBox
+   * attributes to determine their aspect ratios.
+   */
+  var svg = d3.selectAll("svg")
+    .datum(function() {
+      var viewBox = this.getAttribute("viewBox").split(" "),
+          size = viewBox.slice(2),
+          width = size[0],
+          height = size[1],
+          aspect = width / height;
+      return {
+        viewBox: viewBox,
+        width: width,
+        height: height,
+        aspect: aspect
+      };
+    })
+    .call(resize);
+  /*
+   * Whenever the window resizes, resize all of the SVG elements.
+   * You could debounce this method so that it happens less frequently, but
+   * it should be fast as-is.
+   */
+  window.addEventListener("resize", function() {
+    svg.call(resize);
+  });
+  /*
+   * a simple test for whether or not the browser uses an <svg> element's
+   * viewBox aspect ratio to calculate its intrinsic dimensions, just like an
+   * <img> element. All we need to do is create an SVG and give it a fixed
+   * width and auto height, then measure the height to see if its aspect ratio
+   * matches that of the viewBox dimensions.
+   */
+  function obeysViewBox() {
+    var test = d3.select("body").append("svg")
+      .attr("viewBox", "0 0 10 50")
+      .style("width", "200px")
+      .style("height", "auto");
+    var rect = test.node().getBoundingClientRect();
+    test.remove();
+    return rect.height === 1000;
+  }
+  /*
+   * Resize one or more SVG elements using their calculated width and aspect
+   * ratio, as cacluated from their viewBox attribute. This assumes that
+   * elements have a variable width. Variable height SVG elements would set the
+   * "width" style to `Math.ceil(rect.height * d.aspect) + "px"`.
+   */
+  function resize(selection) {
+    selection.style("height", function(d) {
+      this.style.height = "auto";
+      var rect = this.getBoundingClientRect(),
+          height = rect.width / d.aspect;
+      return isFinite(height)
+        ? Math.ceil(height) + "px"
+        : null;
+    });
+  }
+})(this);
+  </script>
+</html>

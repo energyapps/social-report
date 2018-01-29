@@ -46,7 +46,7 @@ $(document).ready ( function() {
         // console.log(sectionID);
         // get counter element parameters
 		var sParams = document.getElementById( sectionID );
-		var index = $( sParams ).index();
+		// var index = $( sParams ).index();
 		var t = $( sParams ).offset().top;
 		var h = $( sParams ).height();
 		var logo = '#' + $( sParams ).data( 'brand' );
@@ -116,17 +116,20 @@ $(document).ready ( function() {
 			var pHeight = $( sibling ).height();
 			// get child span
 			var pParams = $( percentContainer ).children( 'span' );
-			console.log( $(pParams).data('endval') );
+			console.log( scrollPos + "//" + pTop + "//" + pHeight + "==" + (scrollPos-pHeight) );
+			var hook = pTop - pHeight;
 
 		    // create new scroll scene for each percent element
 			var percentScene = new ScrollMagic.Scene( {
 				triggerElement: sibling,
-				duration: pHeight,
+				triggerHook: 0,
+				duration: hook,
 				offset: pHeight + 60
 			})
 			.setPin( sibling, {
 				pushFollowers: false
 			})
+			.setClassToggle( percentContainer, "showPercent" ) // add class toggle
 			.addIndicators() // add trigger indicators (requires plugin)
 			.addTo( controller );
 
@@ -146,6 +149,7 @@ $(document).ready ( function() {
 		    // create function to reset count
 		    function percentReset() {
 		    	animatedPer.reset();
+		    	// percentScene.removePin(true);
 		    }
 
 		    // Run counter functions
