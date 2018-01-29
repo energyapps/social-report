@@ -1,6 +1,7 @@
 $(document).ready ( function() {
 	console.log( "Page loaded. Jquery is running. Now, do stuff.");
 
+	/* TABLETOP.JS: LOADING DATA */
     // Google sheets ID
 	// share url: https://docs.google.com/spreadsheets/d/19wQJE6SrUrp3Li_O_507Z2myD7Jpf_XB4r99ajR14TY
 	var public_spreadsheet_url = '19wQJE6SrUrp3Li_O_507Z2myD7Jpf_XB4r99ajR14TY';
@@ -22,8 +23,9 @@ $(document).ready ( function() {
     // load spreadsheet data
     loadSpreadsheet();
 
+    /* SCROLLMAGIC.JS: CREATE CONTROLLER + SCENES FOR PLATFORM SECTIONS */
     // init ScrollMagic controller
-	var controller = new ScrollMagic.Controller({
+	var controller = new ScrollMagic.Controller( {
 		loglevel: 0, // console log level of detail
 		globalSceneOptions: { // default scene settings
 			triggerHook: 'onCenter',
@@ -31,9 +33,9 @@ $(document).ready ( function() {
 			reverse: true
 		}
 	});
+	// set variable for current scroll position
+	var scrollPos = controller.scrollPos();
 
-	// find all elements with counter class
-	var counterList = document.querySelectorAll( '.counter' );
 	// find each social platform section
 	var sectionList = document.querySelectorAll( '.section' );
 
@@ -42,62 +44,75 @@ $(document).ready ( function() {
         // get target element id
         sectionID = val.id;
         // console.log(sectionID);
-        // get target element counter parameters
+        // get counter element parameters
 		var sParams = document.getElementById( sectionID );
-		var index = $(sParams).index();
-		// var pin = '#' + sectionID;
-		var b = '#' + $(sParams).data("brand");
-		var t = $(sParams).eq(index - 1 * index).offset().top;
-		var h = $(sParams).height();
-		// console.log ( "INDEX: " + index + " TRIGGER: " + b + " OFFSET: " + t + " HEIGHT: " + h );
+		var index = $( sParams ).index();
+		var t = $( sParams ).offset().top;
+		var h = $( sParams ).height();
+		var logo = '#' + $( sParams ).data( 'brand' );
+		// var t = $( sParams ).eq(index - 1 * index).offset().top;
+		// console.log ( "INDEX: " + index + " TRIGGER ELEMENT: " + f /*+ " OFFSET: " + t*/ + " HEIGHT: " + h );
 
 		// create new scroll scene for each section
-		var sectionScene = new ScrollMagic.Scene({
-			triggerElement: b,
+		var sectionScene = new ScrollMagic.Scene( {
+			triggerElement: logo,
 			duration: h,
 			offset: h + 60
 		})
-		.setPin( b, {
+		.setPin( logo, {
 			pushFollowers: false
 		})
-		.setClassToggle( b, "show" ) // add class toggle
-		.addIndicators() // add trigger indicators (requires plugin)
-		.addTo(controller);
+		.setClassToggle( logo, "show" ) // add class toggle
+		// .addIndicators() // add trigger indicators (requires plugin)
+		.addTo( controller );
+
+		// get the scene's trigger position
+		// var triggerPosition = sectionScene.triggerPosition();
+		// console.log( triggerPosition );
+
+		// find all elements with counter class
+		var counterList = val.querySelectorAll( '.counter' );
+		// find all elements with percent class
+		var percentList = val.querySelectorAll( '.percent' );
 
 		// loop through all counters
-		jQuery.each( counterList, function( i, val ) {
+		jQuery.each( counterList, function( i, el ) {
 	        // get target counter id
-	        counterID = val.id;
+	        counterID = el.id;
+	        console.log( sectionID + ": " + counterID );
 	        // get target counter parameters
 			var cParams = document.getElementById( counterID );
-
-			// set variable for parent ID
-			var parent = $( cParams ).parentsUntil( $("#content"), ".section" );
-			var parentTop = $( parent ).offset().top;
-			// console.log ( "ELEMENT TOP: " + parentTop + " WINDOW TOP: " + $(window).scrollTop() );
-			/// USE SCROLLMAGIC HERE TO CONTINUOUSLY GET WINDOW SCROLL LOCATION
-
-			// if ( $(window).scrollTop() == parentTop ) {
-				// declare the function for the count
-			    var animatedNumb = new CountUp( counterID , cParams.dataset.startval, cParams.dataset.endval, 0, cParams.dataset.duration );
+			// declare the function for the count
+		    var animatedNumb = new CountUp( counterID , cParams.dataset.startval, cParams.dataset.endval, 0, cParams.dataset.duration );
+		    function counterStart() {
+		    	animatedNumb.start();
+		    }
+ 			// && counterID == "counter-"  + $( sParams ).data( 'brand' )
+			// function counters ( event ) {
 			    //execute the function and output message to console
 			    if ( !animatedNumb.error ) { // function ok
-			        animatedNumb.start( /*console.log( "the number has been logged for " + counterID )*/ );
+			        // animatedNumb.start( console.log( "the number has been logged for " + counterID ) );
+			        sectionScene.on( "enter", counterStart )
 			    } else { // function error
 			        console.error( animatedNumb.error );
 			        // console.log( isNaN(settings.startVal) );
 			    }
+				// console.log( logo + " scene " + event.trigger );
 			// }
+			// sectionScene.on( "enter", counters );
+/*
+			// debugging
+	        function callback ( event ) {
+			    console.log("EVENT: " + event.type + ", " + event.progress );
+			}
+			// add listeners for change update progress start end enter leave
+			sectionScene.on("progress start end", callback);*/
 	    });
-
-		// } else {
-		// 	controller.removeScene(sectionScene);
-		// }
     });
 
     /* D3 data output */
 	function showInfo(data) {
-	    console.log( "Spreadsheet data is loaded." );
+	    // console.log( "Spreadsheet data is loaded." );
 
 	    // assign DOE social stats to a variable
 	    var doeStats = data.energy_social.elements;
@@ -140,25 +155,26 @@ $(document).ready ( function() {
 	    			.attr( "id", media.platform );
 	    		// filter out target years only
 	    		var stats = filterFollowers( media, colNames );
-	    		var sKeys = Object.keys(stats);
+	    		// parse objects into arrays
+	    		var sKeys = d3.entries(stats);
+	    		// calculate difference in followers over target years
+	    		var diff = parseInt( sKeys[1].value ) / parseInt( sKeys[0].value );
+	    		// console.log ( diff );
 
-	    		// var old = stats.years[0]
-	    		// var diff = parseInt( stats[0][1] ) / parseInt( stats[0][0] );
-				console.log(  );
 				// circle: OLD followers
 				var createCircle = createSVG.append("circle")
-					.attr( "cx", 25 )
-					.attr( "cy", 50 )
-					.attr( "r", 25 )
+					.attr( "cx", 75 )
+					.attr( "cy", 75 )
+					.attr( "r", 50 )
 					.style( "fill", "#396900" )
 					.attr( "class", "past" );
 				// circle: NEW followers
 				var createCircle = createSVG.append("circle")
-					.attr( "cx", 100 )
-					.attr( "cy", 50 )
-					.attr( "r", 25 )
+					.attr( "cx", 200 + diff )
+					.attr( "cy", 200 )
+					.attr( "r", 50 * diff )
 					.style( "fill", "#61AD00" )
-					.attr( "class", "new" );
+					.attr( "class", "latest" );
 	    	}
 	    });
 

@@ -210,6 +210,11 @@ section {
     min-height: 2rem;
 }
 
+#stats-fb.section { background-color: #3B5998; }
+#stats-tw.section { background-color: #1DA1F2; }
+#stats-ig.section { background-color: #E4405F; }
+#stats-li.section { background-color: #0077B5; }
+
 .logo-container {
 	/*background-color: white;*/
     height: 0;
@@ -282,6 +287,16 @@ svg {
     padding-left: 12vw;
     position: relative;
     width: 100%;
+}
+
+.past {
+	fill: #396900;
+	stroke: 1px;
+}
+
+.latest {
+	fill: #61AD00;
+	stroke: 2px;
 }
 
 .percent {
