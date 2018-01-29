@@ -72,14 +72,12 @@ $(document).ready ( function() {
 
 		// find all elements with counter class
 		var counterList = val.querySelectorAll( '.counter' );
-		// find all elements with percent class
-		var percentList = val.querySelectorAll( '.percent' );
 
 		// loop through all counters
 		jQuery.each( counterList, function( i, el ) {
 	        // get target counter id
 	        counterID = el.id;
-	        console.log( sectionID + ": " + counterID );
+	        // console.log( sectionID + ": " + counterID );
 	        // get target counter parameters
 			var cParams = document.getElementById( counterID );
 			// declare the variable for a count
@@ -101,14 +99,72 @@ $(document).ready ( function() {
 		        console.error( animatedNumb.error );
 		        // console.log( isNaN(settings.startVal) );
 		    }
-/*
-			// debugging
-	        function callback ( event ) {
-			    console.log("EVENT: " + event.type + ", " + event.progress );
-			}
-			// add listeners for change update progress start end enter leave
-			sectionScene.on("progress start end", callback);*/
 	    });
+
+		// find all elements with percent class
+		var percentList = val.querySelectorAll( '.percent' );
+
+		// loop through all percent counters
+		jQuery.each( percentList, function( i, pl ) {
+	        // get target percent id
+	        percentID = pl.id;
+			var percentContainer = document.getElementById( percentID );
+
+			// find sibling container and its parameters
+			var sibling = $( percentContainer ).parent().prev();
+			var pTop = $( sibling ).offset().top;
+			var pHeight = $( sibling ).height();
+			// get child span
+			var pParams = $( percentContainer ).children( 'span' );
+			console.log( $(pParams).data('endval') );
+
+		    // create new scroll scene for each percent element
+			var percentScene = new ScrollMagic.Scene( {
+				triggerElement: sibling,
+				duration: pHeight,
+				offset: pHeight + 60
+			})
+			.setPin( sibling, {
+				pushFollowers: false
+			})
+			.addIndicators() // add trigger indicators (requires plugin)
+			.addTo( controller );
+
+			// set options for new count
+			var options = {
+				useEasing: true,
+				useGrouping: true,
+				suffix: '%'
+			};
+
+			// declare the variable for percent count
+		    var animatedPer = new CountUp( percentID , $(pParams).data('startval'), $(pParams).data('endval'), 0, $(pParams).data('duration'), options );
+		    // create function to start count
+		    function percentStart() {
+		    	animatedPer.start( /*console.log( "the number has been logged for " + counterID )*/ );
+		    }
+		    // create function to reset count
+		    function percentReset() {
+		    	animatedPer.reset();
+		    }
+
+		    // Run counter functions
+		    if ( !animatedPer.error ) { // function ok
+		        percentScene.on( "enter", percentStart );
+		        percentScene.on( "leave", percentReset );
+		    } else { // function error
+		        console.error( animatedPer.error );
+		        // console.log( isNaN(settings.startVal) );
+		    }
+	    });
+
+/*
+		// debugging
+        function callback ( event ) {
+		    console.log("EVENT: " + event.type + ", " + event.progress );
+		}
+		// add listeners for change update progress start end enter leave
+		sectionScene.on("progress start end", callback);*/
     });
 
     /* D3 data output */
