@@ -82,24 +82,25 @@ $(document).ready ( function() {
 	        console.log( sectionID + ": " + counterID );
 	        // get target counter parameters
 			var cParams = document.getElementById( counterID );
-			// declare the function for the count
+			// declare the variable for a count
 		    var animatedNumb = new CountUp( counterID , cParams.dataset.startval, cParams.dataset.endval, 0, cParams.dataset.duration );
+		    // create function to start count
 		    function counterStart() {
-		    	animatedNumb.start();
+		    	animatedNumb.start( /*console.log( "the number has been logged for " + counterID )*/ );
 		    }
- 			// && counterID == "counter-"  + $( sParams ).data( 'brand' )
-			// function counters ( event ) {
-			    //execute the function and output message to console
-			    if ( !animatedNumb.error ) { // function ok
-			        // animatedNumb.start( console.log( "the number has been logged for " + counterID ) );
-			        sectionScene.on( "enter", counterStart )
-			    } else { // function error
-			        console.error( animatedNumb.error );
-			        // console.log( isNaN(settings.startVal) );
-			    }
-				// console.log( logo + " scene " + event.trigger );
-			// }
-			// sectionScene.on( "enter", counters );
+		    // create function to reset count
+		    function counterReset() {
+		    	animatedNumb.reset();
+		    }
+
+		    // Run counter functions
+		    if ( !animatedNumb.error ) { // function ok
+		        sectionScene.on( "enter", counterStart );
+		        sectionScene.on( "leave", counterReset );
+		    } else { // function error
+		        console.error( animatedNumb.error );
+		        // console.log( isNaN(settings.startVal) );
+		    }
 /*
 			// debugging
 	        function callback ( event ) {
