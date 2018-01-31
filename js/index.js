@@ -43,32 +43,52 @@ $(document).ready ( function() {
 	jQuery.each( sectionList, function( s, val ) {
         // get target element id
         sectionID = val.id;
-        // console.log(sectionID);
         // get counter element parameters
 		var sParams = document.getElementById( sectionID );
-		// var index = $( sParams ).index();
+
 		var t = $( sParams ).offset().top;
 		var h = $( sParams ).height();
 		var logo = '#' + $( sParams ).data( 'brand' );
-		// var t = $( sParams ).eq(index - 1 * index).offset().top;
-		// console.log ( "INDEX: " + index + " TRIGGER ELEMENT: " + f /*+ " OFFSET: " + t*/ + " HEIGHT: " + h );
 
 		// create new scroll scene for each section
 		var sectionScene = new ScrollMagic.Scene( {
 			triggerElement: logo,
-			duration: h,
-			offset: h + 60
+			duration: h/*,
+			offset: h + 60*/
 		})
 		.setPin( logo, {
 			pushFollowers: false
 		})
 		.setClassToggle( logo, "show" ) // add class toggle
-		// .addIndicators() // add trigger indicators (requires plugin)
-		.addTo( controller );
+		.addTo( controller )
+		.addIndicators() // add trigger indicators (requires plugin)
+		/*.on( "update", function( scene ){
+			console.log( "SCROLL DIRECTION: " + scene.target.controller().info( "scrollDirection" ) );
+		})
+		.on( "enter leave", function( scene ){
+			console.log( "STATE: " + scene.type == "enter" ? "inside" : "outside" );
+		})
+		.on( "start end", function( scene ){
+			console.log( "LAST HIT: " + scene.type == "start" ? "top" : "bottom" );
+		})*/
+		/*.on( "progress", function( scene ){
+			// $( "#progress" ).text( scene.progress.toFixed(3) );
+		});*/
 
-		// get the scene's trigger position
-		// var triggerPosition = sectionScene.triggerPosition();
-		// console.log( triggerPosition );
+		// get a scene's trigger position
+		var triggerPosition = sectionScene.triggerPosition();
+		// get the current scroll offset for the start and end of the scene.
+		var offset = sectionScene.scrollOffset();
+		var duration = sectionScene.duration();
+		var end = offset + duration;
+
+		var logoContainer = document.getElementById( $(sParams).data("brand") );
+		console.log( $(logoContainer).offset().top, $(sParams).offset().top);
+		// output
+		console.log( "SCROLL POS:", scrollPos );
+		console.log( sectionID, "TRIGGER POS:", triggerPosition, "TOP:", t );
+		console.log( "OFFSET:", offset, "DURATION:", duration );
+		console.log( "END: ", end );
 
 		// find all elements with counter class
 		var counterList = val.querySelectorAll( '.counter' );
@@ -77,24 +97,49 @@ $(document).ready ( function() {
 		jQuery.each( counterList, function( i, el ) {
 	        // get target counter id
 	        counterID = el.id;
-	        // console.log( sectionID + ": " + counterID );
-	        // get target counter parameters
+	        // get target counter element and parameters
 			var cParams = document.getElementById( counterID );
+			var cHeight = $( cParams ).height();
+			var windowHeight = $( window ).height();
+			// console.log( );
+
+			// create new scroll scene for each percent element
+			var impressionScene = new ScrollMagic.Scene( {
+				triggerElement: cParams,
+				triggerHook: 1/*,
+				duration: offsetVH,
+				offset: offsetVH - cHeight*/
+			})
+			.setPin( cParams, {
+				pushFollowers: false
+			})
+			.setClassToggle( ".counter", "impressions-fadein" ) // add class toggle
+			// .addIndicators() // add trigger indicators (requires plugin)
+			.addTo( controller );
+
+			// set options for new count
+			var options = {
+				useEasing: true
+			};
+
 			// declare the variable for a count
-		    var animatedNumb = new CountUp( counterID , cParams.dataset.startval, cParams.dataset.endval, 0, cParams.dataset.duration );
+		    var animatedNumb = new CountUp( counterID , cParams.dataset.startval, cParams.dataset.endval, 0, cParams.dataset.duration, options );
 		    // create function to start count
 		    function counterStart() {
-		    	animatedNumb.start( /*console.log( "the number has been logged for " + counterID )*/ );
+		    	// sectionScene.setClassToggle( ".counter", "impressions-animation" )
+				// $( cParams ).removeClass( "impressions-fadeout" ).addClass( "impressions-fadein" );
+		    	animatedNumb.start( console.log( "the number has been logged for " + counterID ) );
 		    }
 		    // create function to reset count
 		    function counterReset() {
 		    	animatedNumb.reset();
+				// $( cParams ).removeClass( "impressions-fadein" ).addClass( "impressions-fadeout" );
 		    }
 
 		    // Run counter functions
 		    if ( !animatedNumb.error ) { // function ok
-		        sectionScene.on( "enter", counterStart );
-		        sectionScene.on( "leave", counterReset );
+		        impressionScene.on( "enter", counterStart );
+		        impressionScene.on( "leave", counterReset );
 		    } else { // function error
 		        console.error( animatedNumb.error );
 		        // console.log( isNaN(settings.startVal) );
@@ -116,7 +161,7 @@ $(document).ready ( function() {
 			var pHeight = $( sibling ).height();
 			// get child span
 			var pParams = $( percentContainer ).children( 'span' );
-			console.log( scrollPos + "//" + pTop + "//" + pHeight + "==" + (scrollPos-pHeight) );
+			// console.log( scrollPos + "//" + pTop + "//" + pHeight + "==" + (scrollPos-pHeight) );
 			var hook = pTop - pHeight;
 
 		    // create new scroll scene for each percent element
@@ -130,7 +175,7 @@ $(document).ready ( function() {
 				pushFollowers: false
 			})
 			.setClassToggle( percentContainer, "showPercent" ) // add class toggle
-			.addIndicators() // add trigger indicators (requires plugin)
+			// .addIndicators() // add trigger indicators (requires plugin)
 			.addTo( controller );
 
 			// set options for new count
