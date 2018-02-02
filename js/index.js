@@ -52,43 +52,18 @@ $(document).ready ( function() {
 
 		// create new scroll scene for each section
 		var sectionScene = new ScrollMagic.Scene( {
-			triggerElement: logo,
-			duration: h/*,
-			offset: h + 60*/
+			triggerElement: sParams,
+			duration: h
 		})
 		.setPin( logo, {
-			pushFollowers: false
+			pushFollowers: true
 		})
 		.setClassToggle( logo, "show" ) // add class toggle
-		.addTo( controller )
-		.addIndicators() // add trigger indicators (requires plugin)
-		/*.on( "update", function( scene ){
-			console.log( "SCROLL DIRECTION: " + scene.target.controller().info( "scrollDirection" ) );
-		})
-		.on( "enter leave", function( scene ){
-			console.log( "STATE: " + scene.type == "enter" ? "inside" : "outside" );
-		})
-		.on( "start end", function( scene ){
-			console.log( "LAST HIT: " + scene.type == "start" ? "top" : "bottom" );
-		})*/
-		/*.on( "progress", function( scene ){
-			// $( "#progress" ).text( scene.progress.toFixed(3) );
-		});*/
+		// .addIndicators() // add trigger indicators (requires plugin)
+		.addTo( controller );
 
-		// get a scene's trigger position
-		var triggerPosition = sectionScene.triggerPosition();
-		// get the current scroll offset for the start and end of the scene.
-		var offset = sectionScene.scrollOffset();
-		var duration = sectionScene.duration();
-		var end = offset + duration;
-
+		// get brand parameter from logo container
 		var logoContainer = document.getElementById( $(sParams).data("brand") );
-		console.log( $(logoContainer).offset().top, $(sParams).offset().top);
-		// output
-		console.log( "SCROLL POS:", scrollPos );
-		console.log( sectionID, "TRIGGER POS:", triggerPosition, "TOP:", t );
-		console.log( "OFFSET:", offset, "DURATION:", duration );
-		console.log( "END: ", end );
 
 		// find all elements with counter class
 		var counterList = val.querySelectorAll( '.counter' );
@@ -100,46 +75,61 @@ $(document).ready ( function() {
 	        // get target counter element and parameters
 			var cParams = document.getElementById( counterID );
 			var cHeight = $( cParams ).height();
-			var windowHeight = $( window ).height();
-			// console.log( );
+
+			// create fade tweens for counters
+			var fadeIn = TweenMax.to( cParams, 1.0, { opacity: 1 } );
+			var fadeOut = TweenMax.to( cParams, 1.0, { opacity: 0 } );
+
+			// SCENE EVENTS: "change update progress start end enter leave"
+			// SCENE STATES: "BEFORE", "DURING" or "AFTER"
+			// SCROLL DIRECTIONS: "PAUSED", "FORWARD" or "REVERSE"
 
 			// create new scroll scene for each percent element
 			var impressionScene = new ScrollMagic.Scene( {
-				triggerElement: cParams,
-				triggerHook: 1/*,
-				duration: offsetVH,
-				offset: offsetVH - cHeight*/
+				triggerElement: sParams,
+				triggerHook: 1,
+				reverse: true/*,
+				duration: cHeight / 2*/
 			})
-			.setPin( cParams, {
+			.setPin( logo, {
 				pushFollowers: false
 			})
-			.setClassToggle( ".counter", "impressions-fadein" ) // add class toggle
-			// .addIndicators() // add trigger indicators (requires plugin)
+			.setTween( fadeIn )
+			.addIndicators( { name: counterID } )
 			.addTo( controller );
 
-			// set options for new count
-			var options = {
+			// set parameters for new count
+			var cStart = cParams.dataset.startval;
+			var cEnd = cParams.dataset.endval - 1000000;
+			var cUpdate = cParams.dataset.endval;
+			var cDuration = cParams.dataset.duration;
+			var cOptions = {
 				useEasing: true
 			};
 
-			// declare the variable for a count
-		    var animatedNumb = new CountUp( counterID , cParams.dataset.startval, cParams.dataset.endval, 0, cParams.dataset.duration, options );
+			// create variable to execute counter function
+		    var animatedNumb = new CountUp( counterID , cStart, cEnd, 0, cDuration , cOptions );
+
 		    // create function to start count
 		    function counterStart() {
-		    	// sectionScene.setClassToggle( ".counter", "impressions-animation" )
-				// $( cParams ).removeClass( "impressions-fadeout" ).addClass( "impressions-fadein" );
-		    	animatedNumb.start( console.log( "the number has been logged for " + counterID ) );
+		    	animatedNumb.start( /*console.log( "the number has been logged for " + counterID )*/ );
+		    	animatedNumb.update( cUpdate );
 		    }
 		    // create function to reset count
-		    function counterReset() {
-		    	animatedNumb.reset();
-				// $( cParams ).removeClass( "impressions-fadein" ).addClass( "impressions-fadeout" );
+		    function counterReset( event ) {
+		    	impressionScene.on( "end leave", function (event) {
+		    		if ( event.scrollDirection == "REVERSE" ) {
+		    			console.log( "REVERSE" );
+		    			fadeIn.reverse();
+		    			animatedNumb.reset();
+		    		}
+		    	});
 		    }
 
 		    // Run counter functions
 		    if ( !animatedNumb.error ) { // function ok
-		        impressionScene.on( "enter", counterStart );
-		        impressionScene.on( "leave", counterReset );
+		        impressionScene.on( "enter start", counterStart );
+		        counterReset;
 		    } else { // function error
 		        console.error( animatedNumb.error );
 		        // console.log( isNaN(settings.startVal) );
@@ -206,9 +196,7 @@ $(document).ready ( function() {
 		        // console.log( isNaN(settings.startVal) );
 		    }
 	    });
-
-/*
-		// debugging
+		/*// debugging
         function callback ( event ) {
 		    console.log("EVENT: " + event.type + ", " + event.progress );
 		}
@@ -230,7 +218,7 @@ $(document).ready ( function() {
 	    // create variable for target year cols
 	    var colNames = [];
 	    // loop through all column names and extract only target years
-	    $(allCols).each( function( k, col ) {
+	    $( allCols ).each( function( k, col ) {
 	    	if ( allCols[k] == "followers_" + ( yyyy - 2 ) || allCols[k] == "followers_" + ( yyyy - 1 ) ) {
 	    		colNames.push( allCols[k] );
 	    	}
@@ -248,7 +236,7 @@ $(document).ready ( function() {
 		};
 
 	    // loop through all the doe stats
-	    $(doeStats).each( function( key, media ) {
+	    $( doeStats ).each( function( key, media ) {
 			// console.log( media );
 	    	// create a variable for the section IDs
 	    	var mp = "followers-" + media.platform;
@@ -262,7 +250,7 @@ $(document).ready ( function() {
 	    		// filter out target years only
 	    		var stats = filterFollowers( media, colNames );
 	    		// parse objects into arrays
-	    		var sKeys = d3.entries(stats);
+	    		var sKeys = d3.entries( stats );
 	    		// calculate difference in followers over target years
 	    		var diff = parseInt( sKeys[1].value ) / parseInt( sKeys[0].value );
 	    		// console.log ( diff );
@@ -272,14 +260,12 @@ $(document).ready ( function() {
 					.attr( "cx", 75 )
 					.attr( "cy", 75 )
 					.attr( "r", 50 )
-					.style( "fill", "#396900" )
 					.attr( "class", "past" );
 				// circle: NEW followers
 				var createCircle = createSVG.append("circle")
 					.attr( "cx", 200 + diff )
 					.attr( "cy", 200 )
 					.attr( "r", 50 * diff )
-					.style( "fill", "#61AD00" )
 					.attr( "class", "latest" );
 	    	}
 	    });
@@ -297,8 +283,8 @@ $( 'section.parallax' ).css( 'background', function () {
     return bg;
 });
 
-/* Scroll functions */
-$( window ).scroll( function(){
+/* Title scroll function */
+$( window ).scroll( function() {
 	// fade the title when user scrolls down
 	$( '.title' ).css( 'opacity', 1 - $(window).scrollTop() / 100 );
 });

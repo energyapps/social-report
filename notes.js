@@ -6,7 +6,33 @@ li: #0077B5
 podcasts: #9933CC
 
 
+/*.on( "update", function( scene ){
+			console.log( "SCROLL DIRECTION: " + scene.target.controller().info( "scrollDirection" ) );
+		})
+		.on( "enter leave", function( scene ){
+			console.log( "STATE: " + scene.type == "enter" ? "inside" : "outside" );
+		})
+		.on( "start end", function( scene ){
+			console.log( "LAST HIT: " + scene.type == "start" ? "top" : "bottom" );
+		})*/
+		/*.on( "progress", function( scene ){
+			// $( "#progress" ).text( scene.progress.toFixed(3) );
+		});*/
 
+// get a scene's trigger position
+		var triggerPosition = sectionScene.triggerPosition();
+		// get the current scroll offset for the start and end of the scene.
+		var offset = sectionScene.scrollOffset();
+		var duration = sectionScene.duration();
+		var end = offset + duration;
+
+		// output
+		console.log( "SCROLL POS:", scrollPos );
+		console.log( sectionID, "TRIGGER POS:", triggerPosition, "TOP:", t, "HEIGHT:", h );
+		console.log( "OFFSET:", offset, "DURATION:", duration );
+		console.log( "END: ", end );
+
+console.log( $(logoContainer).offset().top, $(sParams).offset().top);
 
 // var sections = document.getElementsByTagName( 'section' );
 // var brandIcon = document.getElementById( 'social-brand' );

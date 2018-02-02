@@ -29,7 +29,6 @@ h6 {
 section {
      display: block;
      clear: both;
-     /* height: 100vh; */
      vertical-align: top;
 }
 
@@ -100,12 +99,13 @@ section {
 }
 
 #intro:after {
+	background-color: rgba(57, 105, 0, 0.75);
 	color: #fff;
 	content: 'Scroll down';
 	position: absolute;
 	left: 0;
 	top: 100%;
-	background-color: rgba(97, 173, 0, .25);
+	z-index: 10000;
 }
 
 /*#outro:after {
@@ -204,6 +204,7 @@ section {
 .section {
     margin: 0;
     min-height: 2rem;
+	position: relative;
 }
 
 #stats-fb.section { background-color: #3B5998; }
@@ -270,10 +271,12 @@ section {
 
 /* COUNTERS */
 .counter {
-    display: inline-block;
 	background-color: green;
+    display: inline-block;
     font-size: 8vmax;
-    margin: 0;
+    /*left: 25% !important;*/
+    margin: 0 auto !important;
+    min-height: 2rem;
     opacity: 0;
 	padding: 2rem 3rem;
 }
@@ -417,11 +420,13 @@ section {
 
 /* PERCENTAGE PANELS */
 svg {
-    height: auto;
-    padding-left: 15vw;
-    position: relative;
-    width: 100%;
     display: block;
+    height: 80%;
+    min-height: 40rem;
+    padding-left: 20vw;
+    position: relative;
+    top: 25%;
+    width: 80%;
 }
 
 .past {
@@ -672,4 +677,4 @@ svg {
      .content-block {
          width: 100%;
     }
-}*
+}
