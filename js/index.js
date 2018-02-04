@@ -214,21 +214,21 @@ $(document).ready ( function() {
 	    var allCols = data.energy_social.columnNames;
 	    // establish current date and get year
 	    var today = new Date();
-	    var yyyy = today.getFullYear();
-	    // create variable for target year cols
+	    var currYear = today.getFullYear();
+	    var prevYear = currYear - 1;
+	    // create variables for target year cols
 	    var colNames = [];
 	    // loop through all column names and extract only target years
 	    $( allCols ).each( function( k, col ) {
-	    	if ( allCols[k] == "followers_" + ( yyyy - 2 ) || allCols[k] == "followers_" + ( yyyy - 1 ) ) {
+	    	if ( allCols[k] == "followers_" + ( prevYear - 1 ) || allCols[k] == "followers_" + ( prevYear ) ) {
 	    		colNames.push( allCols[k] );
 	    	}
 	    });
-	    // console.log ( doeStats );
 
 	    // create function to filter stats by target years
 		function filterFollowers( obj, filter ) {
-		  for (prop in obj) {
-		      if ( filter.indexOf(prop) == -1 ) {
+		  for ( prop in obj ) {
+		      if ( filter.indexOf( prop ) == -1 ) {
 		          delete obj[prop];
 		      }
 		  };
@@ -244,29 +244,61 @@ $(document).ready ( function() {
 	    	var doeContainer = document.getElementById( mp );
 
 	    	if ( doeContainer != null ) {
-	    		// create svg element
-	    		var createSVG = d3.select( doeContainer ).append("svg")
-	    			.attr( "id", media.platform );
-	    		// filter out target years only
-	    		var stats = filterFollowers( media, colNames );
-	    		// parse objects into arrays
-	    		var sKeys = d3.entries( stats );
-	    		// calculate difference in followers over target years
-	    		var diff = parseInt( sKeys[1].value ) / parseInt( sKeys[0].value );
-	    		// console.log ( diff );
+				/* LOAD AND PARSE DATA */
+				// filter out target years data
+				var stats = filterFollowers( media, colNames );
+				// separate keys and values
+				var sKeys = d3.keys( stats );
+				var sVals = d3.values( stats );
+				// calculate difference in followers over target years
+				var diff =  parseInt( sVals[1] ) / parseInt( sVals[0] );
+				console.log( sVals, diff );
 
-				// circle: OLD followers
-				var createCircle = createSVG.append("circle")
-					.attr( "cx", 75 )
-					.attr( "cy", 75 )
-					.attr( "r", 50 )
-					.attr( "class", "past" );
-				// circle: NEW followers
-				var createCircle = createSVG.append("circle")
-					.attr( "cx", 200 + diff )
-					.attr( "cy", 200 )
-					.attr( "r", 50 * diff )
-					.attr( "class", "latest" );
+				//create svg element
+				var svg = d3.select( doeContainer ).append( "svg" )
+					.data( [sVals] )
+					.attr( "id", mp );
+
+				var bounds = svg.node().getBoundingClientRect(),
+					width = bounds.width,
+					height = bounds.height;
+				// console.log(width, height);
+
+				/* CREATE SVG ELEMENTS */
+				var followers = svg.selectAll( "g" )
+			    	.data( function( d ) { return d; } )
+			    	.enter().append( "g" )
+					.attr( "class", function( d, i ) {
+						if (i == 0 ) {
+							return "past";
+						} else {
+							return "latest";
+						}
+					})
+					.append( "circle" );
+
+				followers.attr( "cx", function( d, i ) {
+						return ( i * 120 ) + 150;
+					})
+				   .attr( "cy", function( d, i ) {
+						return parseInt( ( ( height * i ) / 3) + height/3 );
+					})
+				   .attr( "r", function( d, i ) {
+				   		console.log(this);
+						// return parseInt( d ) * .85;
+						if (i == 0 ) {
+							return 60;
+						} else {
+							return parseInt( 60 * diff );
+						}
+				   });
+
+				var yearText = svg.select( ".latest" ).append( "text" )
+					.attr( "class", "latestYr" )
+    				.attr( "text-anchor", "middle" )
+    				.attr( "dx", 270 )
+    				.attr( "dy", height * .70 )
+    				.text( prevYear );
 	    	}
 	    });
 

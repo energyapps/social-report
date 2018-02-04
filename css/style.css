@@ -421,22 +421,27 @@ section {
 /* PERCENTAGE PANELS */
 svg {
     display: block;
-    height: 80%;
+    height: 100%;
     min-height: 40rem;
     padding-left: 20vw;
     position: relative;
     top: 25%;
-    width: 80%;
+    width: 100%;
+    margin-right: 2rem;
 }
 
 .past {
 	fill: #396900;
-	stroke: 1px;
 }
 
 .latest {
 	fill: #61AD00;
-	stroke: 2px;
+}
+
+.latestYr {
+	fill: white;
+	font-size: 2em;
+	font-weight: bold;
 }
 
 .percent {
@@ -444,6 +449,16 @@ svg {
 	margin: 0 1em 0 0;
 	text-align: right;
     visibility: hidden;
+}
+
+.qualifier {
+	font-size: 2rem;
+	line-height: 1.1;
+	margin: 0;
+	position: absolute;
+	right: 8rem;
+	text-align: right;
+	width: 20%;
 }
 
 .percent.showPercent {
@@ -677,4 +692,3 @@ svg {
      .content-block {
          width: 100%;
     }
-}
