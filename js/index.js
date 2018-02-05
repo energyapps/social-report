@@ -2,29 +2,29 @@ $(document).ready ( function() {
 	console.log( "Page loaded. Jquery is running. Now, do stuff.");
 
 	/* TABLETOP.JS: LOADING DATA */
-    // Google sheets ID
+	// Google sheets ID
 	// share url: https://docs.google.com/spreadsheets/d/19wQJE6SrUrp3Li_O_507Z2myD7Jpf_XB4r99ajR14TY
 	var public_spreadsheet_url = '19wQJE6SrUrp3Li_O_507Z2myD7Jpf_XB4r99ajR14TY';
 
 	// function for initializing tabletop
 	function loadSpreadsheet() {
 		// Multisheet version:
-	    Tabletop.init( { key: public_spreadsheet_url,
-	         callback: showInfo,
-	         wanted: [ "energy_social", "energy_youtube", "s1_social" ], // specifying sheets to load
-	         parseNumbers: true/*,
-	         postProcess: function(element) {
-	            // convert string date to Date date
-	            element["launch_date"] = Date.parse(element["launch_date"]);
-	         }*/
-	     })
+		Tabletop.init( { key: public_spreadsheet_url,
+			 callback: showInfo,
+			 wanted: [ "energy_social", "energy_youtube", "s1_social" ], // specifying sheets to load
+			 parseNumbers: true/*,
+			 postProcess: function(element) {
+				// convert string date to Date date
+				element["launch_date"] = Date.parse(element["launch_date"]);
+			 }*/
+		 })
 	}
 
-    // load spreadsheet data
-    loadSpreadsheet();
+	// load spreadsheet data
+	loadSpreadsheet();
 
-    /* SCROLLMAGIC.JS: CREATE CONTROLLER + SCENES FOR PLATFORM SECTIONS */
-    // init ScrollMagic controller
+	/* SCROLLMAGIC.JS: CREATE CONTROLLER + SCENES FOR PLATFORM SECTIONS */
+	// init ScrollMagic controller
 	var controller = new ScrollMagic.Controller( {
 		loglevel: 0, // console log level of detail
 		globalSceneOptions: { // default scene settings
@@ -41,9 +41,9 @@ $(document).ready ( function() {
 
 	// loop through all the sections
 	jQuery.each( sectionList, function( s, val ) {
-        // get target element id
-        sectionID = val.id;
-        // get counter element parameters
+		// get target element id
+		sectionID = val.id;
+		// get counter element parameters
 		var sParams = document.getElementById( sectionID );
 
 		var t = $( sParams ).offset().top;
@@ -63,16 +63,16 @@ $(document).ready ( function() {
 		.addTo( controller );
 
 		// get brand parameter from logo container
-		var logoContainer = document.getElementById( $(sParams).data("brand") );
+		var logoContainer = document.getElementById( $( sParams ).data( "brand" ) );
 
 		// find all elements with counter class
 		var counterList = val.querySelectorAll( '.counter' );
 
 		// loop through all counters
 		jQuery.each( counterList, function( i, el ) {
-	        // get target counter id
-	        counterID = el.id;
-	        // get target counter element and parameters
+			// get target counter id
+			counterID = el.id;
+			// get target counter element and parameters
 			var cParams = document.getElementById( counterID );
 			var cHeight = $( cParams ).height();
 
@@ -95,7 +95,7 @@ $(document).ready ( function() {
 				pushFollowers: false
 			})
 			.setTween( fadeIn )
-			.addIndicators( { name: counterID } )
+			// .addIndicators( { name: counterID } )
 			.addTo( controller );
 
 			// set parameters for new count
@@ -108,41 +108,41 @@ $(document).ready ( function() {
 			};
 
 			// create variable to execute counter function
-		    var animatedNumb = new CountUp( counterID , cStart, cEnd, 0, cDuration , cOptions );
+			var animatedNumb = new CountUp( counterID , cStart, cEnd, 0, cDuration , cOptions );
 
-		    // create function to start count
-		    function counterStart() {
-		    	animatedNumb.start( /*console.log( "the number has been logged for " + counterID )*/ );
-		    	animatedNumb.update( cUpdate );
-		    }
-		    // create function to reset count
-		    function counterReset( event ) {
-		    	impressionScene.on( "end leave", function (event) {
-		    		if ( event.scrollDirection == "REVERSE" ) {
-		    			console.log( "REVERSE" );
-		    			fadeIn.reverse();
-		    			animatedNumb.reset();
-		    		}
-		    	});
-		    }
+			// create function to start count
+			function counterStart() {
+				animatedNumb.start( /*console.log( "the number has been logged for " + counterID )*/ );
+				animatedNumb.update( cUpdate );
+			}
+			// create function to reset count
+			function counterReset( event ) {
+				impressionScene.on( "end leave", function (event) {
+					if ( event.scrollDirection == "REVERSE" ) {
+						console.log( "REVERSE" );
+						fadeIn.reverse();
+						animatedNumb.reset();
+					}
+				});
+			}
 
-		    // Run counter functions
-		    if ( !animatedNumb.error ) { // function ok
-		        impressionScene.on( "enter start", counterStart );
-		        counterReset;
-		    } else { // function error
-		        console.error( animatedNumb.error );
-		        // console.log( isNaN(settings.startVal) );
-		    }
-	    });
+			// Run counter functions
+			if ( !animatedNumb.error ) { // function ok
+				impressionScene.on( "enter start", counterStart );
+				counterReset;
+			} else { // function error
+				console.error( animatedNumb.error );
+				// console.log( isNaN(settings.startVal) );
+			}
+		});
 
 		// find all elements with percent class
 		var percentList = val.querySelectorAll( '.percent' );
 
 		// loop through all percent counters
 		jQuery.each( percentList, function( i, pl ) {
-	        // get target percent id
-	        percentID = pl.id;
+			// get target percent id
+			percentID = pl.id;
 			var percentContainer = document.getElementById( percentID );
 
 			// find sibling container and its parameters
@@ -154,7 +154,7 @@ $(document).ready ( function() {
 			// console.log( scrollPos + "//" + pTop + "//" + pHeight + "==" + (scrollPos-pHeight) );
 			var hook = pTop - pHeight;
 
-		    // create new scroll scene for each percent element
+			// create new scroll scene for each percent element
 			var percentScene = new ScrollMagic.Scene( {
 				triggerElement: sibling,
 				triggerHook: 0,
@@ -176,74 +176,79 @@ $(document).ready ( function() {
 			};
 
 			// declare the variable for percent count
-		    var animatedPer = new CountUp( percentID , $(pParams).data('startval'), $(pParams).data('endval'), 0, $(pParams).data('duration'), options );
-		    // create function to start count
-		    function percentStart() {
-		    	animatedPer.start( /*console.log( "the number has been logged for " + counterID )*/ );
-		    }
-		    // create function to reset count
-		    function percentReset() {
-		    	animatedPer.reset();
-		    	// percentScene.removePin(true);
-		    }
+			var animatedPer = new CountUp( percentID , $(pParams).data('startval'), $(pParams).data('endval'), 0, $(pParams).data('duration'), options );
+			// create function to start count
+			function percentStart() {
+				animatedPer.start( /*console.log( "the number has been logged for " + counterID )*/ );
+			}
+			// create function to reset count
+			function percentReset() {
+				animatedPer.reset();
+				// percentScene.removePin(true);
+			}
 
-		    // Run counter functions
-		    if ( !animatedPer.error ) { // function ok
-		        percentScene.on( "enter", percentStart );
-		        percentScene.on( "leave", percentReset );
-		    } else { // function error
-		        console.error( animatedPer.error );
-		        // console.log( isNaN(settings.startVal) );
-		    }
-	    });
+			// Run counter functions
+			if ( !animatedPer.error ) { // function ok
+				percentScene.on( "enter", percentStart );
+				percentScene.on( "leave", percentReset );
+			} else { // function error
+				console.error( animatedPer.error );
+				// console.log( isNaN(settings.startVal) );
+			}
+		});
 		/*// debugging
-        function callback ( event ) {
-		    console.log("EVENT: " + event.type + ", " + event.progress );
+		function callback ( event ) {
+			console.log("EVENT: " + event.type + ", " + event.progress );
 		}
 		// add listeners for change update progress start end enter leave
 		sectionScene.on("progress start end", callback);*/
-    });
+	});
 
-    /* D3 data output */
-	function showInfo(data) {
-	    // console.log( "Spreadsheet data is loaded." );
+	/* D3 data output */
+	function showInfo( data ) {
+		// console.log( "Spreadsheet data is loaded." );
+		var platformInfo = data.energy_social.elements;
+		console.log( platformInfo );
 
-	    // assign DOE social stats to a variable
-	    var doeStats = data.energy_social.elements;
-	    // get all column names
-	    var allCols = data.energy_social.columnNames;
-	    // establish current date and get year
-	    var today = new Date();
-	    var currYear = today.getFullYear();
-	    var prevYear = currYear - 1;
-	    // create variables for target year cols
-	    var colNames = [];
-	    // loop through all column names and extract only target years
-	    $( allCols ).each( function( k, col ) {
-	    	if ( allCols[k] == "followers_" + ( prevYear - 1 ) || allCols[k] == "followers_" + ( prevYear ) ) {
-	    		colNames.push( allCols[k] );
-	    	}
-	    });
+		// assign DOE social stats to a variable
+		var doeStats = data.energy_social.elements;
+		// get all column names
+		var allCols = data.energy_social.columnNames;
+		// establish current date and get year
+		var today = new Date();
+		var currYear = today.getFullYear();
+		var prevYear = currYear - 1;
+		// create variables for target data
+		var colNames = [];
 
-	    // create function to filter stats by target years
+		// loop through all columns
+		$( allCols ).each( function( k, col ) {
+			// extract followers for target years
+			if ( allCols[k] == "followers_" + ( prevYear - 1 ) || allCols[k] == "followers_" + ( prevYear ) ) {
+				colNames.push( allCols[k] );
+			}
+		});
+
+		// create function to filter stats by target years
 		function filterFollowers( obj, filter ) {
-		  for ( prop in obj ) {
-		      if ( filter.indexOf( prop ) == -1 ) {
-		          delete obj[prop];
-		      }
-		  };
-		  return obj;
+			for ( prop in obj ) {
+				if ( filter.indexOf( prop ) == -1 ) {
+					delete obj[prop];
+				}
+			};
+			return obj;
+			// console.log( obj );
 		};
 
-	    // loop through all the doe stats
-	    $( doeStats ).each( function( key, media ) {
+		// loop through all the doe stats
+		$( doeStats ).each( function( key, media ) {
 			// console.log( media );
-	    	// create a variable for the section IDs
-	    	var mp = "followers-" + media.platform;
-	    	// find all containers for each svg
-	    	var doeContainer = document.getElementById( mp );
+			// create a variable for the section IDs
+			var mp = "followers-" + media.platform;
+			// find all containers for each svg
+			var doeContainer = document.getElementById( mp );
 
-	    	if ( doeContainer != null ) {
+			if ( doeContainer != null ) {
 				/* LOAD AND PARSE DATA */
 				// filter out target years data
 				var stats = filterFollowers( media, colNames );
@@ -252,7 +257,7 @@ $(document).ready ( function() {
 				var sVals = d3.values( stats );
 				// calculate difference in followers over target years
 				var diff =  parseInt( sVals[1] ) / parseInt( sVals[0] );
-				console.log( sVals, diff );
+				// console.log( sVals, diff );
 
 				//create svg element
 				var svg = d3.select( doeContainer ).append( "svg" )
@@ -266,8 +271,8 @@ $(document).ready ( function() {
 
 				/* CREATE SVG ELEMENTS */
 				var followers = svg.selectAll( "g" )
-			    	.data( function( d ) { return d; } )
-			    	.enter().append( "g" )
+					.data( function( d ) { return d; } )
+					.enter().append( "g" )
 					.attr( "class", function( d, i ) {
 						if (i == 0 ) {
 							return "past";
@@ -293,17 +298,24 @@ $(document).ready ( function() {
 						}
 				   });
 
-				var yearText = svg.select( ".latest" ).append( "text" )
-					.attr( "class", "latestYr" )
-    				.attr( "text-anchor", "middle" )
-    				.attr( "dx", 270 )
-    				.attr( "dy", height * .70 )
-    				.text( prevYear );
-	    	}
-	    });
+				var yearTextNew = svg.select( ".latest" ).append( "text" )
+					.attr( "class", "years" )
+					.attr( "text-anchor", "middle" )
+					.attr( "dx", 270 )
+					.attr( "dy", height * .70 )
+					.text( prevYear );
 
-	    /* use for secretary account launch date
-	    var launch = media.launch_date;
+				var yearTextOld = svg.select( ".past" ).append( "text" )
+					.attr( "class", "years" )
+					.attr( "text-anchor", "middle" )
+					.attr( "dx", 150 )
+					.attr( "dy", height * .36 )
+					.text( prevYear - 1 );
+			}
+		});
+
+		/* use for secretary account launch date
+		var launch = media.launch_date;
 			console.log ( launch );
 			*/
 	}
@@ -311,8 +323,8 @@ $(document).ready ( function() {
 
 /* Parallax function */ // requires jquery
 $( 'section.parallax' ).css( 'background', function () {
-    var bg = ( 'url(' + $( this ).data( 'image-src' ) + ') no-repeat center fixed' );
-    return bg;
+	var bg = ( 'url(' + $( this ).data( 'image-src' ) + ') no-repeat center fixed' );
+	return bg;
 });
 
 /* Title scroll function */
