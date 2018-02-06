@@ -11,12 +11,13 @@ $(document).ready ( function() {
 		// Multisheet version:
 		Tabletop.init( { key: public_spreadsheet_url,
 			 callback: showInfo,
-			 wanted: [ "energy_social", "energy_youtube", "s1_social" ], // specifying sheets to load
-			 parseNumbers: false/*,
+			 wanted: [ "energy_social"/*, "energy_youtube", "s1_social"*/ ], // specifying sheets to load
+			 parseNumbers: true/*,
 			 postProcess: function(element) {
 				// convert string date to Date date
 				element["launch_date"] = Date.parse(element["launch_date"]);
 			 }*/
+			 // , debug: true
 		 })
 	}
 
@@ -206,13 +207,13 @@ $(document).ready ( function() {
 
 	/* D3 data output */
 	function showInfo( data ) {
-		// console.log( "Spreadsheet data is loaded." );
-		console.log( data );
-		var platformInfo = data.energy_social.elements;
+		console.log( "Spreadsheet data is loaded." );
+		// var platformInfo = data.energy_social.elements;
 		//console.log( platformInfo );
 
 		// assign DOE social stats to a variable
 		var doeStats = data.energy_social.elements;
+		// console.log( doeStats[0].platform );
 		// get all column names
 		var allCols = data.energy_social.columnNames;
 
@@ -220,27 +221,39 @@ $(document).ready ( function() {
 		var today = new Date();
 		var currYear = today.getFullYear();
 		var prevYear = currYear - 1;
-		// create variables for target data
-		var colNames = [];
+		// create variables for followers
+		var oldFoll = "followers_" + ( prevYear - 1 );
+		var newFoll = "followers_" + ( prevYear );
+		var follNum = [];
+		// loop through data and push followers to new array
+		for ( var i = 0; i < doeStats.length; i++ ) {
+			var tempObj = new Object();
+			tempObj[oldFoll] = doeStats[i][oldFoll];
+			tempObj[newFoll] = doeStats[i][newFoll];
+			follNum.push( tempObj );
+			//console.log( follNum[i] );
+		}
 
 		// loop through all columns
-		$( allCols ).each( function( k, col ) {
+	/*	$( allCols ).each( function( k, col ) {
 			// extract followers for target years
-			if ( allCols[k] == "followers_" + ( prevYear - 1 ) || allCols[k] == "followers_" + ( prevYear ) ) {
-				colNames.push( allCols[k] );
+			if ( allCols[k] == oldFoll || allCols[k] == newFoll ) {
+				// push new values to array
+				follNum.push( allCols[k] );
 			}
-		});
+		});*/
 
 		// create function to filter columns accordingly
-		function filterData( obj, filter ) {
+		/*function filterData( obj, filter ) {
 			for ( prop in obj ) {
-				if ( filter.indexOf( prop ) == -1 ) {
-					delete obj[prop];
+				if ( filter.indexOf( prop ) == 1 ) {
+					delete obj[prop]; // delete columns
+					// console.log( prop );
 				}
 			};
 			return obj;
 			// console.log( obj );
-		};
+		};*/
 
 		// loop through all the doe stats
 		$( doeStats ).each( function( key, media ) {
@@ -253,10 +266,11 @@ $(document).ready ( function() {
 			if ( doeContainer != null ) {
 				/* LOAD AND PARSE DATA */
 				// filter out target years data
-				var stats = filterData( media, colNames );
+				// var stats = filterData( media, follNum );
+				// console.log( stats );
 				// separate keys and values
-				var sKeys = d3.keys( stats );
-				var sVals = d3.values( stats );
+				var sKeys = d3.keys( follNum );
+				var sVals = d3.values( follNum );
 				// calculate difference in followers over target years
 				var diff =  parseInt( sVals[1] ) / parseInt( sVals[0] );
 				// console.log( sVals, diff );
