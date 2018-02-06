@@ -12,7 +12,7 @@ $(document).ready ( function() {
 		Tabletop.init( { key: public_spreadsheet_url,
 			 callback: showInfo,
 			 wanted: [ "energy_social", "energy_youtube", "s1_social" ], // specifying sheets to load
-			 parseNumbers: true/*,
+			 parseNumbers: false/*,
 			 postProcess: function(element) {
 				// convert string date to Date date
 				element["launch_date"] = Date.parse(element["launch_date"]);
@@ -119,7 +119,7 @@ $(document).ready ( function() {
 			function counterReset( event ) {
 				impressionScene.on( "end leave", function (event) {
 					if ( event.scrollDirection == "REVERSE" ) {
-						console.log( "REVERSE" );
+						//console.log( "REVERSE" );
 						fadeIn.reverse();
 						animatedNumb.reset();
 					}
@@ -176,7 +176,7 @@ $(document).ready ( function() {
 			};
 
 			// declare the variable for percent count
-			var animatedPer = new CountUp( percentID , $(pParams).data('startval'), $(pParams).data('endval'), 0, $(pParams).data('duration'), options );
+			var animatedPer = new CountUp( percentID , $( pParams ).data( 'startval' ), $( pParams ).data( 'endval' ), 0, $( pParams ).data( 'duration' ), options );
 			// create function to start count
 			function percentStart() {
 				animatedPer.start( /*console.log( "the number has been logged for " + counterID )*/ );
@@ -207,13 +207,15 @@ $(document).ready ( function() {
 	/* D3 data output */
 	function showInfo( data ) {
 		// console.log( "Spreadsheet data is loaded." );
+		console.log( data );
 		var platformInfo = data.energy_social.elements;
-		console.log( platformInfo );
+		//console.log( platformInfo );
 
 		// assign DOE social stats to a variable
 		var doeStats = data.energy_social.elements;
 		// get all column names
 		var allCols = data.energy_social.columnNames;
+
 		// establish current date and get year
 		var today = new Date();
 		var currYear = today.getFullYear();
@@ -229,8 +231,8 @@ $(document).ready ( function() {
 			}
 		});
 
-		// create function to filter stats by target years
-		function filterFollowers( obj, filter ) {
+		// create function to filter columns accordingly
+		function filterData( obj, filter ) {
 			for ( prop in obj ) {
 				if ( filter.indexOf( prop ) == -1 ) {
 					delete obj[prop];
@@ -251,7 +253,7 @@ $(document).ready ( function() {
 			if ( doeContainer != null ) {
 				/* LOAD AND PARSE DATA */
 				// filter out target years data
-				var stats = filterFollowers( media, colNames );
+				var stats = filterData( media, colNames );
 				// separate keys and values
 				var sKeys = d3.keys( stats );
 				var sVals = d3.values( stats );
@@ -289,9 +291,9 @@ $(document).ready ( function() {
 						return parseInt( ( ( height * i ) / 3) + height/3 );
 					})
 				   .attr( "r", function( d, i ) {
-				   		console.log(this);
+				   		//console.log( this );
 						// return parseInt( d ) * .85;
-						if (i == 0 ) {
+						if ( i == 0 ) {
 							return 60;
 						} else {
 							return parseInt( 60 * diff );
