@@ -208,14 +208,10 @@ $(document).ready ( function() {
 	/* D3 data output */
 	function showInfo( data ) {
 		console.log( "Spreadsheet data is loaded." );
-		// var platformInfo = data.energy_social.elements;
-		//console.log( platformInfo );
 
 		// assign DOE social stats to a variable
 		var doeStats = data.energy_social.elements;
-		// console.log( doeStats[0].platform );
-		// get all column names
-		var allCols = data.energy_social.columnNames;
+		//console.log( doeStats );
 
 		// establish current date and get year
 		var today = new Date();
@@ -224,36 +220,28 @@ $(document).ready ( function() {
 		// create variables for followers
 		var oldFoll = "followers_" + ( prevYear - 1 );
 		var newFoll = "followers_" + ( prevYear );
+		// create arrays for platform content
 		var follNum = [];
+		var platformInfo = [];
+
 		// loop through data and push followers to new array
 		for ( var i = 0; i < doeStats.length; i++ ) {
-			var tempObj = new Object();
-			tempObj[oldFoll] = doeStats[i][oldFoll];
-			tempObj[newFoll] = doeStats[i][newFoll];
-			follNum.push( tempObj );
-			//console.log( follNum[i] );
+			// create new object from each array entry
+			var follObj = new Object();
+			var infoObj = new Object();
+
+			// populate array for followers
+			follObj[oldFoll] = doeStats[i][oldFoll];
+			follObj[newFoll] = doeStats[i][newFoll];
+			follNum.push( follObj );
+
+			// populate array for platform info
+			infoObj["handle"] = doeStats[i]["handle"];
+			infoObj["url"] = doeStats[i]["url"];
+			infoObj[newFoll] = doeStats[i][newFoll];
+			platformInfo.push( infoObj );
+			// console.log(  platformInfo[i] );
 		}
-
-		// loop through all columns
-	/*	$( allCols ).each( function( k, col ) {
-			// extract followers for target years
-			if ( allCols[k] == oldFoll || allCols[k] == newFoll ) {
-				// push new values to array
-				follNum.push( allCols[k] );
-			}
-		});*/
-
-		// create function to filter columns accordingly
-		/*function filterData( obj, filter ) {
-			for ( prop in obj ) {
-				if ( filter.indexOf( prop ) == 1 ) {
-					delete obj[prop]; // delete columns
-					// console.log( prop );
-				}
-			};
-			return obj;
-			// console.log( obj );
-		};*/
 
 		// loop through all the doe stats
 		$( doeStats ).each( function( key, media ) {
@@ -264,13 +252,10 @@ $(document).ready ( function() {
 			var doeContainer = document.getElementById( mp );
 
 			if ( doeContainer != null ) {
-				/* LOAD AND PARSE DATA */
-				// filter out target years data
-				// var stats = filterData( media, follNum );
-				// console.log( stats );
-				// separate keys and values
-				var sKeys = d3.keys( follNum );
-				var sVals = d3.values( follNum );
+				// separate follower array's keys and values
+				var sKeys = d3.keys( follNum[key] );
+				var sVals = d3.values( follNum[key] );
+
 				// calculate difference in followers over target years
 				var diff =  parseInt( sVals[1] ) / parseInt( sVals[0] );
 				// console.log( sVals, diff );
@@ -280,17 +265,18 @@ $(document).ready ( function() {
 					.data( [sVals] )
 					.attr( "id", mp );
 
+				// get dimensions of svg
 				var bounds = svg.node().getBoundingClientRect(),
 					width = bounds.width,
 					height = bounds.height;
 				// console.log(width, height);
 
-				/* CREATE SVG ELEMENTS */
+				// create individual svg components
 				var followers = svg.selectAll( "g" )
 					.data( function( d ) { return d; } )
 					.enter().append( "g" )
 					.attr( "class", function( d, i ) {
-						if (i == 0 ) {
+						if ( i == 0 ) {
 							return "past";
 						} else {
 							return "latest";
@@ -306,7 +292,6 @@ $(document).ready ( function() {
 					})
 				   .attr( "r", function( d, i ) {
 				   		//console.log( this );
-						// return parseInt( d ) * .85;
 						if ( i == 0 ) {
 							return 60;
 						} else {
@@ -327,6 +312,21 @@ $(document).ready ( function() {
 					.attr( "dx", 150 )
 					.attr( "dy", height * .36 )
 					.text( prevYear - 1 );
+
+/*<div class="platform-info">
+					<h3 id="facebook-handle" class='handle'><a id="facebook-url" href=""></a></h3>
+					<h4 class="total-followers"></h4>
+				</div>*/
+
+				var platformText = svg.append( "text" )
+					.attr( "class", "info" )
+					.attr( "text-anchor", "middle" )
+					.append( "tspan" ).attr( "class", "number" ).text( platformInfo[key][newFoll] )
+					.attr( "dx", 50 )
+					.attr( "dy", 50 )
+					.append( "tspan" ).attr( "class", "suffix" ).text( "total followers" )
+					.attr( "dx", -150 )
+					.attr( "dy", 30 );
 			}
 		});
 

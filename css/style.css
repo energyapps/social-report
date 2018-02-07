@@ -459,6 +459,20 @@ svg {
 	font-weight: bold;
 }
 
+.info {
+    fill: white;
+    line-height: 2;
+}
+
+.number {
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+.suffix {
+    font-size: 2rem;
+}
+
 .percent {
 	font-size: 10vmax;
 	margin: 0 1em 0 0;
