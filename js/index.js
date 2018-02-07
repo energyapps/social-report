@@ -49,7 +49,9 @@ $(document).ready ( function() {
 
 		var t = $( sParams ).offset().top;
 		var h = $( sParams ).height();
-		var logo = '#' + $( sParams ).data( 'brand' );
+		var logo = "#" + $( sParams ).data( 'brand' );
+		var handleCont = "#" + $( sParams ).data( 'brand' ) + "-handle";
+		console.log( handleCont );
 
 		// create new scroll scene for each section
 		var sectionScene = new ScrollMagic.Scene( {
@@ -63,8 +65,17 @@ $(document).ready ( function() {
 		// .addIndicators() // add trigger indicators (requires plugin)
 		.addTo( controller );
 
-		// get brand parameter from logo container
-		var logoContainer = document.getElementById( $( sParams ).data( "brand" ) );
+		// create new scroll scene for platform info divs
+		var handleScene = new ScrollMagic.Scene( {
+			triggerElement: sParams,
+			duration: h
+		})
+		.setPin( logo, {
+			pushFollowers: true
+		})
+		.setClassToggle( handleCont, "show" ) // add class toggle
+		// .addIndicators() // add trigger indicators (requires plugin)
+		.addTo( controller );
 
 		// find all elements with counter class
 		var counterList = val.querySelectorAll( '.counter' );
@@ -240,17 +251,35 @@ $(document).ready ( function() {
 			infoObj["url"] = doeStats[i]["url"];
 			infoObj[newFoll] = doeStats[i][newFoll];
 			platformInfo.push( infoObj );
-			// console.log(  platformInfo[i] );
 		}
 
 		// loop through all the doe stats
 		$( doeStats ).each( function( key, media ) {
 			// console.log( media );
-			// create a variable for the section IDs
+
+
+			/*<div class="platform-info">
+					<h3 id="facebook-handle" class='handle'><a id="facebook-url" href=""></a></h3>
+					<h4 class="total-followers"></h4>
+				</div>*/
+
+			// create variables for the platform information div IDs
+			// var service = media.platform +  "-handle";
+			var url = media.platform +  "-url";
+				url = document.getElementById( url );
+			// var handle = document.getElementById( service );
+
+			/* POPULATE PLATFORM INFORMATION INTO CORRESPONDING DIVS */
+			$( url ).text( platformInfo[key]["handle"] );
+			$( url ).attr( "href", platformInfo[key]["url"] );
+			// console.log( url );
+
+			// create a variable for the follower div IDs
 			var mp = "followers-" + media.platform;
 			// find all containers for each svg
 			var doeContainer = document.getElementById( mp );
 
+			/* CREATE SVG SHAPES AND TEXT INSIDE FOLLOWERS DIV */
 			if ( doeContainer != null ) {
 				// separate follower array's keys and values
 				var sKeys = d3.keys( follNum[key] );
@@ -260,7 +289,7 @@ $(document).ready ( function() {
 				var diff =  parseInt( sVals[1] ) / parseInt( sVals[0] );
 				// console.log( sVals, diff );
 
-				//create svg element
+				//create svg container
 				var svg = d3.select( doeContainer ).append( "svg" )
 					.data( [sVals] )
 					.attr( "id", mp );
@@ -313,19 +342,15 @@ $(document).ready ( function() {
 					.attr( "dy", height * .36 )
 					.text( prevYear - 1 );
 
-/*<div class="platform-info">
-					<h3 id="facebook-handle" class='handle'><a id="facebook-url" href=""></a></h3>
-					<h4 class="total-followers"></h4>
-				</div>*/
-
-				var platformText = svg.append( "text" )
+				var followers = svg.append( "text" )
 					.attr( "class", "info" )
-					.attr( "text-anchor", "middle" )
-					.append( "tspan" ).attr( "class", "number" ).text( platformInfo[key][newFoll] )
-					.attr( "dx", 50 )
-					.attr( "dy", 50 )
-					.append( "tspan" ).attr( "class", "suffix" ).text( "total followers" )
-					.attr( "dx", -150 )
+					.attr( "y", "60" )
+					.attr( "dx", "50" )
+					.append( "tspan" ).attr( "class", "number" ).text( sVals[1] + "+" )
+					.attr( "x", 0 );
+
+				svg.select( ".info" ).append( "tspan" ).attr( "class", "suffix" ).text( "total followers" )
+					.attr( "x", 50 )
 					.attr( "dy", 30 );
 			}
 		});

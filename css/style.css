@@ -265,23 +265,37 @@ section {
 	}
 }
 
-.brand.show {
-	visibility: visible;
+.platform-info {
+    bottom: 35%;
+    display: block;
+    font-size: 2vw;
+    margin: 0 5rem 0;
+    position: fixed;
+    visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    z-index: 10000;
+	/* transitions */
+    -webkit-transition: all .02s ease-in-out;
+    -moz-transition: all .02s ease-in-out;
+    -ms-transition: all .02s ease-in-out;
+    -o-transition: all .02s ease-in-out;
+    transition: all .02s ease-in-out;
+    margin-bottom: -1.5rem;
 }
 
-.platform-info {
-	display: block;
-	font-size: 2vw;
-	margin: 0 5rem 0;
-	position: fixed;
-	bottom: 35%;
-	-webkit-font-smoothing: antialiased;
-	/* transitions */
-	-webkit-transition: all .02s ease-in-out;
-	-moz-transition: all .02s ease-in-out;
-	-ms-transition: all .02s ease-in-out;
-	-o-transition: all .02s ease-in-out;
-	transition: all .02s ease-in-out;
+.brand.show,
+.platform-info.show {
+    visibility: visible;
+}
+
+.handle, .handle:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.handle:hover {
+    color: lightgray;
+    text-decoration: underline;
 }
 
 /* COUNTERS */
@@ -462,6 +476,8 @@ svg {
 .info {
     fill: white;
     line-height: 2;
+    padding-left: 2rem;
+    text-anchor: middle;
 }
 
 .number {
