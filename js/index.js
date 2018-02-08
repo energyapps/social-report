@@ -38,7 +38,7 @@ $(document).ready ( function() {
 	var scrollPos = controller.scrollPos();
 
 	// find each social platform section
-	var sectionList = document.querySelectorAll( '.section' );
+	var sectionList = document.querySelectorAll( ".section" );
 
 	// loop through all the sections
 	jQuery.each( sectionList, function( s, val ) {
@@ -49,9 +49,9 @@ $(document).ready ( function() {
 
 		var t = $( sParams ).offset().top;
 		var h = $( sParams ).height();
-		var logo = "#" + $( sParams ).data( 'brand' );
-		var handleCont = "#" + $( sParams ).data( 'brand' ) + "-handle";
-		console.log( handleCont );
+		var logo = "#" + $( sParams ).data( "brand" );
+		var handleCont = "#" + $( sParams ).data( "brand" ) + "-handle";
+		// console.log( handleCont );
 
 		// create new scroll scene for each section
 		var sectionScene = new ScrollMagic.Scene( {
@@ -62,7 +62,7 @@ $(document).ready ( function() {
 			pushFollowers: true
 		})
 		.setClassToggle( logo, "show" ) // add class toggle
-		// .addIndicators() // add trigger indicators (requires plugin)
+		// .addIndicators( { name: logo } )
 		.addTo( controller );
 
 		// create new scroll scene for platform info divs
@@ -74,11 +74,11 @@ $(document).ready ( function() {
 			pushFollowers: true
 		})
 		.setClassToggle( handleCont, "show" ) // add class toggle
-		// .addIndicators() // add trigger indicators (requires plugin)
+		// .addIndicators( { name: handleCont } )
 		.addTo( controller );
 
 		// find all elements with counter class
-		var counterList = val.querySelectorAll( '.counter' );
+		var counterList = val.querySelectorAll( ".counter" );
 
 		// loop through all counters
 		jQuery.each( counterList, function( i, el ) {
@@ -162,7 +162,7 @@ $(document).ready ( function() {
 			var pTop = $( sibling ).offset().top;
 			var pHeight = $( sibling ).height();
 			// get child span
-			var pParams = $( percentContainer ).children( 'span' );
+			var pParams = $( percentContainer ).children( "span" );
 			// console.log( scrollPos + "//" + pTop + "//" + pHeight + "==" + (scrollPos-pHeight) );
 			var hook = pTop - pHeight;
 
@@ -177,8 +177,14 @@ $(document).ready ( function() {
 				pushFollowers: false
 			})
 			.setClassToggle( percentContainer, "showPercent" ) // add class toggle
-			// .addIndicators() // add trigger indicators (requires plugin)
 			.addTo( controller );
+
+			/*// ScrollMagic debugging function
+			function callback ( event ) {
+				console.log( pl, event.type, event.progress );
+			}
+			// execute debug function for this scene
+			percentScene.on( "progress start end", callback ); // add listeners for change*/
 
 			// set options for new count
 			var options = {
@@ -208,12 +214,6 @@ $(document).ready ( function() {
 				// console.log( isNaN(settings.startVal) );
 			}
 		});
-		/*// debugging
-		function callback ( event ) {
-			console.log("EVENT: " + event.type + ", " + event.progress );
-		}
-		// add listeners for change update progress start end enter leave
-		sectionScene.on("progress start end", callback);*/
 	});
 
 	/* D3 data output */
@@ -257,23 +257,22 @@ $(document).ready ( function() {
 		$( doeStats ).each( function( key, media ) {
 			// console.log( media );
 
-
-			/*<div class="platform-info">
-					<h3 id="facebook-handle" class='handle'><a id="facebook-url" href=""></a></h3>
-					<h4 class="total-followers"></h4>
-				</div>*/
-
+			/**
+			*** ACCOUNT INFORMATION ***
+			**/
 			// create variables for the platform information div IDs
 			// var service = media.platform +  "-handle";
 			var url = media.platform +  "-url";
 				url = document.getElementById( url );
 			// var handle = document.getElementById( service );
 
-			/* POPULATE PLATFORM INFORMATION INTO CORRESPONDING DIVS */
+			/* POPULATE + ANIMATE CORRESPONDING DIVS */
 			$( url ).text( platformInfo[key]["handle"] );
 			$( url ).attr( "href", platformInfo[key]["url"] );
-			// console.log( url );
 
+			/**
+			*** FOLLOWER DATA ***
+			**/
 			// create a variable for the follower div IDs
 			var mp = "followers-" + media.platform;
 			// find all containers for each svg
@@ -342,16 +341,49 @@ $(document).ready ( function() {
 					.attr( "dy", height * .36 )
 					.text( prevYear - 1 );
 
-				var followers = svg.append( "text" )
+				var addText = svg.append( "text" )
+					.attr( "id", "totals-" + media.platform )
 					.attr( "class", "info" )
-					.attr( "y", "60" )
-					.attr( "dx", "50" )
+					.attr( "y", 60 )
+					.attr( "dx", 50 )
 					.append( "tspan" ).attr( "class", "number" ).text( sVals[1] + "+" )
 					.attr( "x", 0 );
 
 				svg.select( ".info" ).append( "tspan" ).attr( "class", "suffix" ).text( "total followers" )
 					.attr( "x", 50 )
 					.attr( "dy", 30 );
+
+				/* Text animation */
+				// create variable for each text element
+				var textEl = document.getElementById( "totals-" + media.platform );
+				// console.log( /*bounds,*/ doeContainer.getBoundingClientRect().bottom, textEl.getBoundingClientRect().bottom );
+
+				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1, zIndex: 10 } );
+					TweenMax.set( textEl, { opacity: 0, zIndex: 0 } );
+					textTween.pause(); // pause tween until triggered by scene (below)
+
+				// create new scroll scene for each percent element
+				var textScene = new ScrollMagic.Scene( {
+					triggerElement: doeContainer,
+					triggerHook: 0,
+					duration: height + ( textEl.getBoundingClientRect().height * 1.25 ),
+					loglevel: 3
+				})
+				.setTween( "textTween" )
+				.addIndicators( { name: "#totals-" + media.platform } )
+				.addTo( controller );
+
+				// tween forwards and backward
+				textScene.on( "enter start leave end", function( event ) {
+					// reverse if not inside the scene
+					if ( textScene.state() != "DURING" ) {
+						textTween.delay( 2 );
+						textTween.reverse();
+					} else { // play fowards otherwise
+						textTween.delay( 0 );
+						textTween.play();
+					}
+				});
 			}
 		});
 
