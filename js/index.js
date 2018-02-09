@@ -1,4 +1,4 @@
-$(document).ready ( function() {
+$( document ).ready ( function() {
 	console.log( "Page loaded. Jquery is running. Now, do stuff.");
 
 	/* TABLETOP.JS: LOADING DATA */
@@ -52,7 +52,6 @@ $(document).ready ( function() {
 		var h = $( sParams ).height();
 		var logo = "#" + $( sParams ).data( "brand" );
 		var handleCont = "#" + $( sParams ).data( "brand" ) + "-handle";
-		var logoT = $( sParams ).data( "brand" );
 
 		// create new scroll scene for each section
 		var sectionScene = new ScrollMagic.Scene( {
@@ -66,7 +65,7 @@ $(document).ready ( function() {
 
 		// create new scroll scene for platform info divs
 		var handleScene = new ScrollMagic.Scene( {
-			offset: -20,
+			/*offset: -20,*/
 			triggerElement: sParams,
 			duration: h
 		})
@@ -180,8 +179,8 @@ $(document).ready ( function() {
 			var percentScene = new ScrollMagic.Scene( {
 				triggerElement: sibling,
 				triggerHook: 0,
-				duration: hook,
-				offset: pHeight + 60
+				duration: hook/*,
+				offset: pHeight + 60*/
 			})
 			.setPin( sibling, {
 				pushFollowers: false
@@ -322,10 +321,10 @@ $(document).ready ( function() {
 					.append( "circle" );
 
 				followers.attr( "cx", function( d, i ) {
-						return ( i * 120 ) + 150;
+						return ( i * 150 ) + 150;
 					})
 				   .attr( "cy", function( d, i ) {
-						return parseInt( ( ( height * i ) / 3) + height/3 );
+						return parseInt( ( ( height * i )/3 ) + height*.4 );
 					})
 				   .attr( "r", function( d, i ) {
 				   		//console.log( this );
@@ -339,21 +338,21 @@ $(document).ready ( function() {
 				var yearTextNew = svg.select( ".latest" ).append( "text" )
 					.attr( "class", "years" )
 					.attr( "text-anchor", "middle" )
-					.attr( "dx", 270 )
-					.attr( "dy", height * .70 )
+					.attr( "dx", 300 )
+					.attr( "dy", height * .76 )
 					.text( prevYear );
 
 				var yearTextOld = svg.select( ".past" ).append( "text" )
 					.attr( "class", "years" )
 					.attr( "text-anchor", "middle" )
 					.attr( "dx", 150 )
-					.attr( "dy", height * .36 )
+					.attr( "dy", height * .42 )
 					.text( prevYear - 1 );
 
 				var addText = svg.append( "text" )
 					.attr( "id", "totals-" + media.platform )
 					.attr( "class", "info" )
-					.attr( "y", 20 )
+					.attr( "y", 60 )
 					.attr( "dx", 50 )
 					.append( "tspan" ).attr( "class", "number" ).text( sVals[1] + "+" )
 					.attr( "x", 0 );
