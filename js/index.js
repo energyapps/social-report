@@ -30,12 +30,13 @@ $(document).ready ( function() {
 		loglevel: 0, // console log level of detail
 		globalSceneOptions: { // default scene settings
 			triggerHook: 'onCenter',
-			offset: 20,
+			/*offset: 20,*/
 			reverse: true
 		}
 	});
-	// set variable for current scroll position
-	var scrollPos = controller.scrollPos();
+	// SCENE EVENTS: "change update progress start end enter leave"
+	// SCENE STATES: "BEFORE", "DURING" or "AFTER"
+	// SCROLL DIRECTIONS: "PAUSED", "FORWARD" or "REVERSE"
 
 	// find each social platform section
 	var sectionList = document.querySelectorAll( ".section" );
@@ -51,29 +52,26 @@ $(document).ready ( function() {
 		var h = $( sParams ).height();
 		var logo = "#" + $( sParams ).data( "brand" );
 		var handleCont = "#" + $( sParams ).data( "brand" ) + "-handle";
-		// console.log( handleCont );
+		var logoT = $( sParams ).data( "brand" );
 
 		// create new scroll scene for each section
 		var sectionScene = new ScrollMagic.Scene( {
 			triggerElement: sParams,
 			duration: h
 		})
-		.setPin( logo, {
-			pushFollowers: true
-		})
 		.setClassToggle( logo, "show" ) // add class toggle
+		// .setTween( logoTween )
 		// .addIndicators( { name: logo } )
 		.addTo( controller );
 
 		// create new scroll scene for platform info divs
 		var handleScene = new ScrollMagic.Scene( {
+			offset: -20,
 			triggerElement: sParams,
 			duration: h
 		})
-		.setPin( logo, {
-			pushFollowers: true
-		})
 		.setClassToggle( handleCont, "show" ) // add class toggle
+		// .setTween( handleTween )
 		// .addIndicators( { name: handleCont } )
 		.addTo( controller );
 
@@ -88,27 +86,8 @@ $(document).ready ( function() {
 			var cParams = document.getElementById( counterID );
 			var cHeight = $( cParams ).height();
 
-			// create fade tweens for counters
-			var fadeIn = TweenMax.to( cParams, 1.0, { opacity: 1 } );
-			var fadeOut = TweenMax.to( cParams, 1.0, { opacity: 0 } );
-
-			// SCENE EVENTS: "change update progress start end enter leave"
-			// SCENE STATES: "BEFORE", "DURING" or "AFTER"
-			// SCROLL DIRECTIONS: "PAUSED", "FORWARD" or "REVERSE"
-
-			// create new scroll scene for each percent element
-			var impressionScene = new ScrollMagic.Scene( {
-				triggerElement: sParams,
-				triggerHook: 1,
-				reverse: true/*,
-				duration: cHeight / 2*/
-			})
-			.setPin( logo, {
-				pushFollowers: false
-			})
-			.setTween( fadeIn )
-			// .addIndicators( { name: counterID } )
-			.addTo( controller );
+			// get container element height
+			var hCont = $( cParams ).parents( ".impressions-container" ).height();
 
 			// set parameters for new count
 			var cStart = cParams.dataset.startval;
@@ -119,33 +98,64 @@ $(document).ready ( function() {
 				useEasing: true
 			};
 
-			// create variable to execute counter function
-			var animatedNumb = new CountUp( counterID , cStart, cEnd, 0, cDuration , cOptions );
-
-			// create function to start count
-			function counterStart() {
-				animatedNumb.start( /*console.log( "the number has been logged for " + counterID )*/ );
-				animatedNumb.update( cUpdate );
+			// callback function to find out if counting is done
+			var complete = false;
+			function callOnComplete() {
+				complete = true;
+				// console.log ( "Done counting", complete );
 			}
-			// create function to reset count
-			function counterReset( event ) {
-				impressionScene.on( "end leave", function (event) {
-					if ( event.scrollDirection == "REVERSE" ) {
-						//console.log( "REVERSE" );
-						fadeIn.reverse();
-						animatedNumb.reset();
+			// create counter functions
+			var countUpFwd = new CountUp( counterID , cStart, cEnd, 0, cDuration , cOptions ); // forward
+			var countUpBkd = new CountUp( counterID , cEnd , cStart, 0, cDuration , cOptions ); // backward
+
+			// create fade tween for counters
+			var countTween = TweenMax.to( cParams, 1.0, { opacity: 1 } );
+				TweenMax.set( cParams, { opacity: 0 } );
+				countTween.pause(); // pause tween until triggered by scene (below)
+
+			// create new scroll scene for each percent element
+			var impressionScene = new ScrollMagic.Scene( {
+				triggerElement: sParams,
+				triggerHook: 0,
+				reverse: true,
+				duration: hCont + 150
+			})
+			.setPin( logo, {
+				pushFollowers: false
+			})
+			.setTween( countTween )
+			// .addIndicators( { name: counterID } )
+			.addTo( controller );
+
+			// tween scene forwards and backward
+			impressionScene.on( "enter start leave end", function( event ) {
+				// reverse if not inside the scene
+				if ( impressionScene.state() != "DURING" ) {
+					// play tween to fade counter out
+					countTween.delay( 1 );
+					countTween.reverse();
+					// Run backwards count
+					if ( !countUpBkd.error ) { // function ok
+						countUpBkd.start( callOnComplete );
+						countUpFwd.reset();
+					} else { // function error
+						console.error( "there's an error", countUpBkd.error );
+						// console.log( isNaN( cStart ), isNaN( cEnd ) );
 					}
-				});
-			}
-
-			// Run counter functions
-			if ( !animatedNumb.error ) { // function ok
-				impressionScene.on( "enter start", counterStart );
-				counterReset;
-			} else { // function error
-				console.error( animatedNumb.error );
-				// console.log( isNaN(settings.startVal) );
-			}
+				} else { // play fowards otherwise
+					// play tween to fade counter
+					countTween.play();
+					// Run forward count
+					if ( !countUpFwd.error ) { // function ok
+						countUpBkd.reset();
+						countUpFwd.start( callOnComplete );
+						countUpFwd.update( cUpdate );
+					} else { // function error
+						console.error( "there's an error", countUpFwd.error );
+						// console.log( isNaN( cStart ), isNaN( cEnd ) );
+					}
+				}
+			});
 		});
 
 		// find all elements with percent class
@@ -256,7 +266,6 @@ $(document).ready ( function() {
 		// loop through all the doe stats
 		$( doeStats ).each( function( key, media ) {
 			// console.log( media );
-
 			/**
 			*** ACCOUNT INFORMATION ***
 			**/
@@ -344,7 +353,7 @@ $(document).ready ( function() {
 				var addText = svg.append( "text" )
 					.attr( "id", "totals-" + media.platform )
 					.attr( "class", "info" )
-					.attr( "y", 60 )
+					.attr( "y", 20 )
 					.attr( "dx", 50 )
 					.append( "tspan" ).attr( "class", "number" ).text( sVals[1] + "+" )
 					.attr( "x", 0 );
@@ -356,7 +365,6 @@ $(document).ready ( function() {
 				/* Text animation */
 				// create variable for each text element
 				var textEl = document.getElementById( "totals-" + media.platform );
-				// console.log( /*bounds,*/ doeContainer.getBoundingClientRect().bottom, textEl.getBoundingClientRect().bottom );
 
 				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1, zIndex: 10 } );
 					TweenMax.set( textEl, { opacity: 0, zIndex: 0 } );
@@ -366,14 +374,14 @@ $(document).ready ( function() {
 				var textScene = new ScrollMagic.Scene( {
 					triggerElement: doeContainer,
 					triggerHook: 0,
-					duration: height + ( textEl.getBoundingClientRect().height * 1.25 ),
-					loglevel: 3
+					duration: height + ( textEl.getBoundingClientRect().height * 1.25 )/*,
+					loglevel: 3*/
 				})
-				.setTween( "textTween" )
-				.addIndicators( { name: "#totals-" + media.platform } )
+				.setTween( textTween )
+				// .addIndicators( { name: "#totals-" + media.platform } )
 				.addTo( controller );
 
-				// tween forwards and backward
+				// tween scene forwards and backward
 				textScene.on( "enter start leave end", function( event ) {
 					// reverse if not inside the scene
 					if ( textScene.state() != "DURING" ) {
