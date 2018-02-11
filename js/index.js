@@ -11,7 +11,7 @@ $( document ).ready ( function() {
 		// Multisheet version:
 		Tabletop.init( { key: public_spreadsheet_url,
 			 callback: showInfo,
-			 wanted: [ "energy_social"/*, "energy_youtube", "s1_social"*/ ], // specifying sheets to load
+			 wanted: [ "energy_social", "energy_youtube", "s1_social" ], // specifying sheets to load
 			 parseNumbers: true/*,
 			 postProcess: function(element) {
 				// convert string date to Date date
@@ -41,6 +41,9 @@ $( document ).ready ( function() {
 	// find each social platform section
 	var sectionList = document.querySelectorAll( ".section" );
 
+	// set universal variable for Secretary's prefix
+	var secPrefix = "sec";
+
 	// loop through all the sections
 	jQuery.each( sectionList, function( s, val ) {
 		// get target element id
@@ -52,6 +55,11 @@ $( document ).ready ( function() {
 		var h = $( sParams ).height();
 		var logo = "#" + $( sParams ).data( "brand" );
 		var handleCont = "#" + $( sParams ).data( "brand" ) + "-handle";
+		// check for IDs with sec prefix
+		if ( sectionID.includes( secPrefix ) ) {
+			var logo = "#" + secPrefix + "-" + $( sParams ).data( "brand" );
+			var handleCont = "#" + secPrefix + "-" + $( sParams ).data( "brand" ) + "-handle";
+		};
 
 		// create new scroll scene for each section
 		var sectionScene = new ScrollMagic.Scene( {
@@ -158,22 +166,48 @@ $( document ).ready ( function() {
 		});
 
 		// find all elements with percent class
-		var percentList = val.querySelectorAll( '.percent' );
+		var percentList = val.querySelectorAll( ".percent" );
 
 		// loop through all percent counters
 		jQuery.each( percentList, function( i, pl ) {
 			// get target percent id
-			percentID = pl.id;
-			var percentContainer = document.getElementById( percentID );
+			var percentID = pl.id;
+			// console.log( percentID ); // confirming that both doe AND sec sections are found
+			var animPercentID;
+
+			// check for IDs with sec prefix
+			if ( percentID.includes( secPrefix ) ) {
+				// console.log( percentID );
+				var secPercentID = pl.id;
+				var percentContainer = document.getElementById( secPercentID );
+				animPercentID = secPercentID;
+			} else {
+				var percentContainer = document.getElementById( percentID );
+				animPercentID = percentID;
+			};
 
 			// find sibling container and its parameters
 			var sibling = $( percentContainer ).parent().prev();
 			var pTop = $( sibling ).offset().top;
 			var pHeight = $( sibling ).height();
+			var hook = pTop - pHeight;
 			// get child span
 			var pParams = $( percentContainer ).children( "span" );
-			// console.log( scrollPos + "//" + pTop + "//" + pHeight + "==" + (scrollPos-pHeight) );
-			var hook = pTop - pHeight;
+			// set data variables from span data
+			var startingAt = $( pParams ).data( "startval" );
+			var endingAt = $( pParams ).data( "endval" );
+			var lastingFor = $( pParams ).data( "duration" );
+
+			// PREFIX: evaluate direction of animation
+			function plusminus () {
+				if ( endingAt > startingAt ) {
+					return "<span class='percentPrefix up'>\u25b2</span>";
+				} else if ( startingAt > endingAt ) {
+					return "<span class='percentPrefix down'>\u25bc</span>";
+				} else {
+					return "";
+				}
+			}
 
 			// create new scroll scene for each percent element
 			var percentScene = new ScrollMagic.Scene( {
@@ -197,13 +231,15 @@ $( document ).ready ( function() {
 
 			// set options for new count
 			var options = {
+				// delay: 1,
 				useEasing: true,
 				useGrouping: true,
-				suffix: '%'
+				prefix: plusminus(),
+				suffix: "%"
 			};
 
 			// declare the variable for percent count
-			var animatedPer = new CountUp( percentID , $( pParams ).data( 'startval' ), $( pParams ).data( 'endval' ), 0, $( pParams ).data( 'duration' ), options );
+			var animatedPer = new CountUp( animPercentID , startingAt, endingAt, 0, lastingFor, options );
 			// create function to start count
 			function percentStart() {
 				animatedPer.start( /*console.log( "the number has been logged for " + counterID )*/ );
@@ -211,7 +247,6 @@ $( document ).ready ( function() {
 			// create function to reset count
 			function percentReset() {
 				animatedPer.reset();
-				// percentScene.removePin(true);
 			}
 
 			// Run counter functions
@@ -229,6 +264,7 @@ $( document ).ready ( function() {
 	function showInfo( data ) {
 		console.log( "Spreadsheet data is loaded." );
 
+	/* DEPARTMENT-WIDE ACCOUNTS (SECRETARY ACCOUNTS BELOW THIS) */
 		// assign DOE social stats to a variable
 		var doeStats = data.energy_social.elements;
 		//console.log( doeStats );
@@ -258,7 +294,7 @@ $( document ).ready ( function() {
 			// populate array for platform info
 			infoObj["handle"] = doeStats[i]["handle"];
 			infoObj["url"] = doeStats[i]["url"];
-			infoObj[newFoll] = doeStats[i][newFoll];
+			// infoObj[newFoll] = doeStats[i][newFoll];
 			platformInfo.push( infoObj );
 		}
 
@@ -394,10 +430,169 @@ $( document ).ready ( function() {
 			}
 		});
 
-		/* use for secretary account launch date
-		var launch = media.launch_date;
-			console.log ( launch );
-			*/
+	/* SECRETARY'S ACCOUNTS */
+		// assign S1 social stats to a variable
+		var s1Stats = data.s1_social.elements;
+		// console.log( s1Stats );
+
+		// create arrays for platform content
+		var s1FollNum = [];
+		var s1PlatformInfo = [];
+
+		// loop through data and push followers to new array
+		for ( var i = 0; i < s1Stats.length; i++ ) {
+			// create new object from each array entry
+			var s1FollObj = new Object();
+			var s1InfoObj = new Object();
+
+			// populate array for followers
+			s1FollObj[oldFoll] = s1Stats[i][oldFoll];
+			s1FollObj[newFoll] = s1Stats[i][newFoll];
+			s1FollNum.push( s1FollObj );
+
+			// populate array for platform info
+			s1InfoObj["handle"] = s1Stats[i]["handle"];
+			s1InfoObj["url"] = s1Stats[i]["url"];
+			// s1InfoObj[newFoll] = s1Stats[i][newFoll];
+			s1PlatformInfo.push( s1InfoObj );
+		}
+
+		//console.log( s1FollNum, s1PlatformInfo );
+
+		// loop through all the doe stats
+		$( s1Stats ).each( function( key, media ) {
+			// console.log( media );
+			/**
+			*** ACCOUNT INFORMATION ***
+			**/
+			// create variables for the platform information div IDs
+			// var service = media.platform +  "-handle";
+			var url = media.platform +  "-url";
+				// check for IDs with sec prefix
+				if ( sectionID.includes( secPrefix ) ) {
+					url = secPrefix + "-" + url;
+				}
+				url = document.getElementById( url );
+
+			/* POPULATE + ANIMATE CORRESPONDING DIVS */
+			$( url ).text( s1PlatformInfo[key]["handle"] );
+			$( url ).attr( "href", s1PlatformInfo[key]["url"] );
+
+			/**
+			*** FOLLOWER DATA ***
+			**/
+			// create a variable for the follower div IDs
+			var mp = "sec-followers-" + media.platform;
+			// find all containers for each svg
+			var s1Container = document.getElementById( mp );
+
+			/* CREATE SVG SHAPES AND TEXT INSIDE FOLLOWERS DIV */
+			if ( s1Container != null ) {
+				// separate follower array's keys and values
+				var s1Keys = d3.keys( s1FollNum[key] );
+				var s1Vals = d3.values( s1FollNum[key] );
+
+				// calculate difference in followers over target years
+				var diff =  parseInt( s1Vals[1] ) / parseInt( s1Vals[0] );
+				// console.log( s1Vals, diff );
+
+				//create svg container
+				var svg = d3.select( s1Container ).append( "svg" )
+					.data( [s1Vals] )
+					.attr( "id", mp );
+
+				// get dimensions of svg
+				var bounds = svg.node().getBoundingClientRect(),
+					width = bounds.width,
+					height = bounds.height;
+				// console.log(width, height);
+
+				// create individual svg components
+				var followers = svg.selectAll( "g" )
+					.data( function( d ) { return d; } )
+					.enter().append( "g" )
+					.attr( "class", function( d, i ) {
+						if ( i == 0 ) {
+							return "past";
+						} else {
+							return "latest";
+						}
+					})
+					.append( "circle" );
+
+				followers.attr( "cx", function( d, i ) {
+						return ( i * 150 ) + 150;
+					})
+				   .attr( "cy", function( d, i ) {
+						return parseInt( ( ( height * i )/3 ) + height*.4 );
+					})
+				   .attr( "r", function( d, i ) {
+				   		//console.log( this );
+						if ( i == 0 ) {
+							return 60;
+						} else {
+							return parseInt( 60 * diff );
+						}
+				   });
+
+				var yearTextNew = svg.select( ".latest" ).append( "text" )
+					.attr( "class", "years" )
+					.attr( "text-anchor", "middle" )
+					.attr( "dx", 300 )
+					.attr( "dy", height * .76 )
+					.text( prevYear );
+
+				var yearTextOld = svg.select( ".past" ).append( "text" )
+					.attr( "class", "years" )
+					.attr( "text-anchor", "middle" )
+					.attr( "dx", 150 )
+					.attr( "dy", height * .42 )
+					.text( prevYear - 1 );
+
+				var addText = svg.append( "text" )
+					.attr( "id", "totals-" + media.platform )
+					.attr( "class", "info" )
+					.attr( "y", 60 )
+					.attr( "dx", 50 )
+					.append( "tspan" ).attr( "class", "number" ).text( s1Vals[1] + "+" )
+					.attr( "x", 0 );
+
+				svg.select( ".info" ).append( "tspan" ).attr( "class", "suffix" ).text( "total followers" )
+					.attr( "x", 50 )
+					.attr( "dy", 30 );
+
+				/* Text animation */
+				// create variable for each text element
+				var textEl = document.getElementById( "totals-" + media.platform );
+
+				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1, zIndex: 10 } );
+					TweenMax.set( textEl, { opacity: 0, zIndex: 0 } );
+					textTween.pause(); // pause tween until triggered by scene (below)
+
+				// create new scroll scene for each percent element
+				var textScene = new ScrollMagic.Scene( {
+					triggerElement: s1Container,
+					triggerHook: 0,
+					duration: height + ( textEl.getBoundingClientRect().height * 1.25 )/*,
+					loglevel: 3*/
+				})
+				.setTween( textTween )
+				// .addIndicators( { name: "#totals-" + media.platform } )
+				.addTo( controller );
+
+				// tween scene forwards and backward
+				textScene.on( "enter start leave end", function( event ) {
+					// reverse if not inside the scene
+					if ( textScene.state() != "DURING" ) {
+						textTween.delay( 2 );
+						textTween.reverse();
+					} else { // play fowards otherwise
+						textTween.delay( 0 );
+						textTween.play();
+					}
+				});
+			}
+		});
 	}
 });
 
