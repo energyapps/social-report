@@ -41,8 +41,11 @@ $( document ).ready ( function() {
 	// find each social platform section
 	var sectionList = document.querySelectorAll( ".section" );
 
-	// set universal variable for Secretary's prefix
-	var secPrefix = "sec";
+	// set universal variables
+	var secPrefix = "sec", // Secretary's prefix
+		radius = 60, // follower circles: default radius
+		duration = 1000, // follower circles: animation time in ms
+		transition = 200; // follower circles: transition time in ms
 
 	// loop through all the sections
 	jQuery.each( sectionList, function( s, val ) {
@@ -277,19 +280,25 @@ $( document ).ready ( function() {
 		var oldFoll = "followers_" + ( prevYear - 1 );
 		var newFoll = "followers_" + ( prevYear );
 		// create arrays for platform content
-		var follNum = [];
-		var platformInfo = [];
+		var follNum = [], // followers ([old year][new year])
+			percentChange = [], // difference in followers
+			platformInfo = []; // handles + urls
 
 		// loop through data and push followers to new array
 		for ( var i = 0; i < doeStats.length; i++ ) {
 			// create new object from each array entry
-			var follObj = new Object();
-			var infoObj = new Object();
+			var follObj = new Object(),
+				changeObj = new Object(),
+				infoObj = new Object();
 
 			// populate array for followers
 			follObj[oldFoll] = doeStats[i][oldFoll];
 			follObj[newFoll] = doeStats[i][newFoll];
 			follNum.push( follObj );
+
+			// populate array for percent change
+			changeObj["difference"] = doeStats[i]["difference"];
+			percentChange.push( changeObj );
 
 			// populate array for platform info
 			infoObj["handle"] = doeStats[i]["handle"];
@@ -297,18 +306,17 @@ $( document ).ready ( function() {
 			// infoObj[newFoll] = doeStats[i][newFoll];
 			platformInfo.push( infoObj );
 		}
+		// console.log( percentChange );
 
-		// loop through all the doe stats
+		// loop through all DOE stats
 		$( doeStats ).each( function( key, media ) {
 			// console.log( media );
 			/**
 			*** ACCOUNT INFORMATION ***
 			**/
 			// create variables for the platform information div IDs
-			// var service = media.platform +  "-handle";
 			var url = media.platform +  "-url";
 				url = document.getElementById( url );
-			// var handle = document.getElementById( service );
 
 			/* POPULATE + ANIMATE CORRESPONDING DIVS */
 			$( url ).text( platformInfo[key]["handle"] );
@@ -322,15 +330,21 @@ $( document ).ready ( function() {
 			// find all containers for each svg
 			var doeContainer = document.getElementById( mp );
 
+			/* FUNCTION FOR DRAWING ANIMATED CIRCLES */
+			function drawAnimCircle( element, percent, width, height, text_y ) {
+				// set defaults values for parameters
+				percent = typeof percent !== 'undefined' ? percent : 100;
+				width = typeof width !== 'undefined' ? width : 290;
+				height = typeof height !== 'undefined' ? height : 290;
+				text_y = typeof text_y !== 'undefined' ? text_y : "15%";
+			}
+
 			/* CREATE SVG SHAPES AND TEXT INSIDE FOLLOWERS DIV */
 			if ( doeContainer != null ) {
-				// separate follower array's keys and values
-				var sKeys = d3.keys( follNum[key] );
-				var sVals = d3.values( follNum[key] );
-
-				// calculate difference in followers over target years
-				var diff =  parseInt( sVals[1] ) / parseInt( sVals[0] );
-				// console.log( sVals, diff );
+				// separate follower array's keys and values and parse percent change values
+				var sKeys = d3.keys( follNum[key] ),
+					sVals = d3.values( follNum[key] ),
+					sChange = d3.values( percentChange[key] );
 
 				//create svg container
 				var svg = d3.select( doeContainer ).append( "svg" )
@@ -347,27 +361,29 @@ $( document ).ready ( function() {
 				var followers = svg.selectAll( "g" )
 					.data( function( d ) { return d; } )
 					.enter().append( "g" )
-					.attr( "class", function( d, i ) {
+					.attr( "class", function( d, i ) { // add classes to each separate "g" element
 						if ( i == 0 ) {
 							return "past";
 						} else {
 							return "latest";
 						}
 					})
-					.append( "circle" );
+					.append( "circle" );  // function for old circle (static)
 
 				followers.attr( "cx", function( d, i ) {
-						return ( i * 150 ) + 150;
+						while ( i < 2 ) {
+							return ( i * 150 ) + 150;
+						}
 					})
 				   .attr( "cy", function( d, i ) {
-						return parseInt( ( ( height * i )/3 ) + height*.4 );
+						while ( i < 2 ) {
+							return parseInt( ( ( height * i )/3 ) + height * 0.4 );
+						}
 					})
 				   .attr( "r", function( d, i ) {
-				   		//console.log( this );
-						if ( i == 0 ) {
-							return 60;
-						} else {
-							return parseInt( 60 * diff );
+				   		// console.log(this);
+						while ( i < 2 ) {
+							return ( i * ( sChange * radius) ) + radius;
 						}
 				   });
 
@@ -375,7 +391,7 @@ $( document ).ready ( function() {
 					.attr( "class", "years" )
 					.attr( "text-anchor", "middle" )
 					.attr( "dx", 300 )
-					.attr( "dy", height * .76 )
+					.attr( "dy", height * 0.76 )
 					.text( prevYear );
 
 				var yearTextOld = svg.select( ".past" ).append( "text" )
@@ -388,12 +404,16 @@ $( document ).ready ( function() {
 				var addText = svg.append( "text" )
 					.attr( "id", "totals-" + media.platform )
 					.attr( "class", "info" )
-					.attr( "y", 60 )
+					.attr( "dy", 30 )
 					.attr( "dx", 50 )
-					.append( "tspan" ).attr( "class", "number" ).text( sVals[1] + "+" )
+					.append( "tspan" ).attr( "class", "context" ).text( "more than" )
 					.attr( "x", 0 );
 
-				svg.select( ".info" ).append( "tspan" ).attr( "class", "suffix" ).text( "total followers" )
+				svg.select( ".info" ).append( "tspan" ).attr( "class", "number" ).text( d3.format( ",.0d" )( sVals[1] ) ) // format number to an integer grouped by thousands with zero decimals
+					.attr( "x", 50 )
+					.attr( "dy", 40 );
+
+				svg.select( ".info" ).append( "tspan" ).attr( "class", "context" ).text( "total followers" )
 					.attr( "x", 50 )
 					.attr( "dy", 30 );
 
@@ -402,7 +422,7 @@ $( document ).ready ( function() {
 				var textEl = document.getElementById( "totals-" + media.platform );
 
 				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1, zIndex: 10 } );
-					TweenMax.set( textEl, { opacity: 0, zIndex: 0 } );
+					TweenMax.set( textEl, { opacity: .1, zIndex: 0 } );
 					textTween.pause(); // pause tween until triggered by scene (below)
 
 				// create new scroll scene for each percent element

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TESTING circle anim</title>
+
+	<style type="text/css">
+		body {
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			margin: auto;
+			width: 960px;
+			padding-top: 20px;
+			background-color: #012647;
+		}
+
+		text {
+			font-family: "RamaGothicM-Heavy",Impact,Haettenschweiler,"Franklin Gothic Bold",Charcoal,"Helvetica Inserat","Bitstream Vera Sans Bold","Arial Black",sans-serif;
+			font-size: 7rem;
+			font-weight: 400;
+			line-height: 16rem;
+			fill: white; /*#1072b8*/
+		}
+
+		#donut {
+			width: 29rem;
+			height: 29rem;
+			margin: 0 auto;
+		}
+
+		path.color0 {
+			fill: #1072b8;
+		}
+
+		path.color1 {
+			fill: #35526b;
+		}
+	</style>
+</head>
+<body>
+<!-- data-donut="42" -->
+	<div id="donut">
+	</div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+
+	<script type="text/javascript">
+		// create variables for length and type of transition in animation
+		var duration = 1000,
+			transition = 200;
+
+		drawAnimCircle(
+			'#donut', // element that will contain svg
+			$( '#donut' ).data( 'donut' )/*, // get data from container
+			290,
+			290,
+			".35em"*/
+		);
+
+		function drawAnimCircle( element, percent, width, height, text_y ) {
+			// set defaults if data missing
+			percent = typeof percent !== 'undefined' ? percent : 100;
+			width = typeof width !== 'undefined' ? width : 290;
+			height = typeof height !== 'undefined' ? height : 290;
+			text_y = typeof text_y !== 'undefined' ? text_y : "15%";
+
+			var dataset = {
+				lower: calcPercent( 0 ), // where to start anim
+				upper: calcPercent( percent ) // where to end anim
+			},
+			radius = Math.min( width, height ) / 2, // calculate radius from smaller measurement
+			pie = d3.layout.pie().sort( null ), // draw a pie layout
+			format = d3.format( ".0%" ); // format percent text
+
+			var arc = d3.svg.arc() // draw circle arcs
+				.innerRadius( 0 ) // draw inner radius = donut hole (originally 'radius - 20')
+				.outerRadius( radius ); // draw edge of circle (outline)
+
+			var svg = d3.select(element).append( "svg" ) // create svg element
+				.attr( "width", width ) // set svg width
+				.attr( "height", height ) // set svg height
+				.append( "g" ) // create "g" container element
+				.attr( "transform", "translate(" + width / 2 + "," + height / 2 + ")" ); // center "g" in viewport
+
+			var path = svg.selectAll( "path" ) // find path elements
+				.data( pie( dataset.lower ) ) // pass anim start variable to pie function
+				.enter().append( "path" ) // create path on enter
+				.attr( "class", function( d, i ) { return "color" + i } ) // add class based on index #
+				.attr( "d", arc ) // set d attribute to arc variable (inner/outer radii)
+				.each( function( d ) { this._current = d; } ); // store the initial values
+
+			var text = svg.append( "text" ) // add a text element to svg
+				.attr( "text-anchor", "middle" ) // anchor text to middle
+				.attr( "dy", text_y ); // offset element vertically
+
+			if ( typeof( percent ) === "string" ) { // if there's a percent string
+				text.text( percent ); // add string to text element
+			} else {
+				var progress = 0;
+				var timeout = setTimeout( function () {
+					clearTimeout( timeout ); // clear this function
+					path = path.data( pie( dataset.upper ) ); // update the data to upper limit
+
+					// animate from lower limit to upper
+					path.transition().duration( duration ).attrTween( "d", function ( a ) {
+						// Interpolate from _current to the new angle
+						// During the transition, _current is updated in-place by d3.interpolate
+						var i = d3.interpolate( this._current, a ); // Store the displayed angles in _current
+						var i2 = d3.interpolate( progress, percent );
+
+						// set initial _current value to 0
+						this._current = i( 0 );
+
+						// redraw the arcs and update the text content over time
+						return function( t ) {
+							text.text( format( i2( t ) / 100) ); // update text
+							return arc( i( t ) ); // redraw arc
+						};
+					});
+				}, 200 ); // delay start of function for 200ms
+			}
+		};
+
+		// calculate percentages from data
+		function calcPercent( percent ) {
+			return [ percent, 100-percent ];
+		};
+		console.log( calcPercent(100) );
+	</script>
+</body>
+</html>
