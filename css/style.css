@@ -64,6 +64,7 @@ section {
 #outro {
 	background-color: #61AD00;
 	height: calc(100vh);
+	z-index: 999999999;
 }
 
 #intro:after, #outro:after {
