@@ -55,10 +55,15 @@ section {
 /***
 **** INTRODUCTION && TITLE BLOCK
 ***/
-#intro, #outro {
+#intro {
 	 height: calc(100vh - 60px);
 	 position: relative;
 	 width: 100%;
+}
+
+#outro {
+	background-color: #61AD00;
+	height: calc(100vh);
 }
 
 #intro:after, #outro:after {
@@ -311,12 +316,12 @@ section {
 svg {
 	display: block;
 	height: 100%;
+	margin-right: 2rem;
 	min-height: 40rem;
 	padding-left: 20vw;
 	position: relative;
 	top: 25%;
 	width: 100%;
-	margin-right: 2rem;
 }
 
 /* follower info */
@@ -337,13 +342,15 @@ svg {
     font-size: 2rem;
 }
 
-/* circle follower years */
+/* Followers circles */
 .past {
 	fill: #396900;
+	y: 0;
 }
 
 .latest {
 	fill: #61AD00;
+	y: 0;
 }
 
 .years {

@@ -355,7 +355,6 @@ $( document ).ready ( function() {
 				var bounds = svg.node().getBoundingClientRect(),
 					width = bounds.width,
 					height = bounds.height;
-				// console.log(width, height);
 
 				// create individual svg components
 				var followers = svg.selectAll( "g" )
@@ -370,41 +369,43 @@ $( document ).ready ( function() {
 					})
 					.append( "circle" );  // function for old circle (static)
 
-				followers.attr( "cx", function( d, i ) {
-						while ( i < 2 ) {
-							return ( i * 150 ) + 150;
-						}
-					})
-				   .attr( "cy", function( d, i ) {
-						while ( i < 2 ) {
-							return parseInt( ( ( height * i )/3 ) + height * 0.4 );
-						}
-					})
-				   .attr( "r", function( d, i ) {
-				   		// console.log(this);
-						while ( i < 2 ) {
-							return ( i * ( sChange * radius) ) + radius;
-						}
-				   });
+				// create a variable for each circle
+				var oldCircle = svg.select( ".past" ),
+					newCircle = svg.select( ".latest" );
 
-				var yearTextNew = svg.select( ".latest" ).append( "text" )
+				// add static circle for previous period
+				oldCircle.select( "circle" )
+					.attr( "cx", 50 )
+					.attr( "cy", height / 2 )
+					.attr( "r", radius );
+				// add text for previous period
+				oldCircle.append( "text" )
 					.attr( "class", "years" )
 					.attr( "text-anchor", "middle" )
-					.attr( "dx", 300 )
-					.attr( "dy", height * 0.76 )
-					.text( prevYear );
-
-				var yearTextOld = svg.select( ".past" ).append( "text" )
-					.attr( "class", "years" )
-					.attr( "text-anchor", "middle" )
-					.attr( "dx", 150 )
-					.attr( "dy", height * .42 )
+					.attr( "dx", 50 )
+					.attr( "dy", height / 2 + 10 )
 					.text( prevYear - 1 );
 
+				// Add static circle for current period
+				newCircle.select( "circle" )
+					.attr( "cx", width / 3 )
+					.attr( "cy", height / 2 )
+					.attr( "r", function() {
+						return ( sChange * radius ) + radius;
+					});
+				// add text for latest period
+				newCircle.append( "text" )
+					.attr( "class", "years" )
+					.attr( "text-anchor", "middle" )
+					.attr( "dx", width / 3 )
+					.attr( "dy", height / 2 + 10)
+					.text( prevYear );
+
+				// Add text with total number of followers
 				var addText = svg.append( "text" )
 					.attr( "id", "totals-" + media.platform )
 					.attr( "class", "info" )
-					.attr( "dy", 30 )
+					.attr( "dy", 20 )
 					.attr( "dx", 50 )
 					.append( "tspan" ).attr( "class", "context" ).text( "more than" )
 					.attr( "x", 0 );
@@ -421,8 +422,8 @@ $( document ).ready ( function() {
 				// create variable for each text element
 				var textEl = document.getElementById( "totals-" + media.platform );
 
-				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1, zIndex: 10 } );
-					TweenMax.set( textEl, { opacity: .1, zIndex: 0 } );
+				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1 } );
+					TweenMax.set( textEl, { opacity: .5 } );
 					textTween.pause(); // pause tween until triggered by scene (below)
 
 				// create new scroll scene for each percent element
