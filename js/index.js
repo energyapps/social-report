@@ -329,6 +329,15 @@ $( document ).ready ( function() {
 			// find all containers for each svg
 			var doeContainer = document.getElementById( mp );
 
+			if ( scrollPos > (doeContainer.offset + 200) ) {
+				console.log( "We're more than 200 away from " + mp );
+			} else {
+				console.log( "Still too close to " + mp + ", don't hide yet" );
+			}
+
+			console.log( scrollPos, doeContainer.offsetTop,  scrollPos - doeContainer.offsetTop );
+
+
 			/* CREATE SVG SHAPES AND TEXT INSIDE FOLLOWERS DIV */
 			if ( doeContainer != null ) {
 				// separate follower array's keys and values and parse percent change values
@@ -347,8 +356,7 @@ $( document ).ready ( function() {
 					height = bounds.height,
 					top = bounds.top;
 
-				/*console.log( scrollPos );
-				console.log( mp, top, "///", height );*/
+				// console.log( mp, top, "///", height );
 
 				// create individual svg components
 				var followers = svg.selectAll( "g" )
@@ -365,68 +373,66 @@ $( document ).ready ( function() {
 
 				/* SVG: circle shape elements */
 				// create a variable for each circle
-				var oldCircle = svg.select( ".past" ),
-					newCircle = svg.select( ".latest" );
+				var pastData = svg.select( ".past" ),
+					latestData = svg.select( ".latest" ),
+					latestCircle = latestData.select( "circle" );
 
 				// add static circle for previous period
-				oldCircle.select( "circle" )
+				pastData.select( "circle" )
 					.attr( "cx", 50 )
 					.attr( "cy", height / 2 )
 					.attr( "r", radius );
 
-				// Add static circle for current period
-				newCircle.select( "circle" )
-					.attr( "cx", width / 3 )
-					.attr( "cy", height / 2 )
-					.attr( "r", radius ) // start with same size as oldCircle
-					.style( "fill", "#396900" ); // start with same color as oldCircle
+				// Add static circle for latest period
+				function _circleReset() {
+					latestCircle.attr( "cx", width / 3 )
+						.attr( "cy", height / 2 )
+						.attr( "r", radius ) // start with same size as pastData
+						.style( "fill", "#396900" ); // start with same color as pastData
+				}
+				// add initial static circle for latest period
+				_circleReset();
 
-				newCircle.selectAll( "circle" )
-					.transition( "playCircle" ) // create a transition with a name
+				// define function to animate circle for latest period
+				function _circlePlay() {
+					latestCircle.transition( "playForward" ) // create a transition with a name
 						.attr( "r", function() {
 							return ( sChange * radius ) + radius; // calculate new radius based on change in followers + update
-						})
+							}
+						)
 						.style( "fill", "#61AD00" ) // change color
 						.style( "stroke", "white" ) // add stroke
-				  		.delay( 200 ) // delay the start of the transition
-				  		.duration( function() {
+						// .delay( 200 ) // delay the start of the transition
+						.ease( d3.easeLinear )
+						.duration( function() {
 							return ( sChange * duration ) + duration; // calculate duration based on change in followers
 						});
+				}
 
 				/* Circle animation */
-				// create variable for each text element
-				var circToAnim = document.getElementById( "totals-" + media.platform );
-
-				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1 } );
-					TweenMax.set( textEl, { opacity: .5 } );
-					textTween.pause(); // pause tween until triggered by scene (below)
-
 				// create new scroll scene for each percent element
-				var textScene = new ScrollMagic.Scene( {
+				var circleScene = new ScrollMagic.Scene( {
 					triggerElement: doeContainer,
-					triggerHook: 0,
-					duration: height + ( textEl.getBoundingClientRect().height * 1.25 )/*,
-					loglevel: 3*/
+					offset: -height / 2,
+					duration: height * 2
 				})
-				.setTween( textTween )
-				// .addIndicators( { name: "#totals-" + media.platform } )
+				.addIndicators( { name: "#circles-" + media.platform } )
 				.addTo( controller );
 
 				// tween scene forwards and backward
-				textScene.on( "enter start leave end", function( event ) {
+				circleScene.on( "enter start leave end", function( event ) {
 					// reverse if not inside the scene
-					if ( textScene.state() != "DURING" ) {
-						textTween.delay( 2 );
-						textTween.reverse();
+					if ( circleScene.state() != "DURING" ) {
+						latestCircle.transition().on( "end", function() {
+							_circleReset();
+						});
 					} else { // play fowards otherwise
-						textTween.delay( 0 );
-						textTween.play();
+						_circlePlay();
 					}
 				});
-
 				/* SVG: text elements */
 				// add text over "past" circle
-				oldCircle.append( "text" )
+				pastData.append( "text" )
 					.attr( "class", "years" )
 					.attr( "text-anchor", "middle" )
 					.attr( "dx", 50 )
@@ -434,7 +440,7 @@ $( document ).ready ( function() {
 					.text( prevYear - 1 );
 
 				// add text over "latest" circle
-				newCircle.append( "text" )
+				latestData.append( "text" )
 					.attr( "class", "years" )
 					.attr( "text-anchor", "middle" )
 					.attr( "dx", width / 3 )
