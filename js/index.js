@@ -29,8 +29,7 @@ $( document ).ready ( function() {
 	var controller = new ScrollMagic.Controller( {
 		loglevel: 0, // console log level of detail
 		globalSceneOptions: { // default scene settings
-			triggerHook: 'onCenter',
-			/*offset: 20,*/
+			triggerHook: "onCenter",
 			reverse: true
 		}
 	});
@@ -45,7 +44,7 @@ $( document ).ready ( function() {
 	var secPrefix = "sec", // Secretary's prefix
 		radius = 60, // follower circles: default radius
 		duration = 1000, // follower circles: animation time in ms
-		transition = 200; // follower circles: transition time in ms
+		scrollPos = controller.scrollPos(); // set variable for current scroll position
 
 	// loop through all the sections
 	jQuery.each( sectionList, function( s, val ) {
@@ -330,15 +329,6 @@ $( document ).ready ( function() {
 			// find all containers for each svg
 			var doeContainer = document.getElementById( mp );
 
-			/* FUNCTION FOR DRAWING ANIMATED CIRCLES */
-			function drawAnimCircle( element, percent, width, height, text_y ) {
-				// set defaults values for parameters
-				percent = typeof percent !== 'undefined' ? percent : 100;
-				width = typeof width !== 'undefined' ? width : 290;
-				height = typeof height !== 'undefined' ? height : 290;
-				text_y = typeof text_y !== 'undefined' ? text_y : "15%";
-			}
-
 			/* CREATE SVG SHAPES AND TEXT INSIDE FOLLOWERS DIV */
 			if ( doeContainer != null ) {
 				// separate follower array's keys and values and parse percent change values
@@ -354,7 +344,11 @@ $( document ).ready ( function() {
 				// get dimensions of svg
 				var bounds = svg.node().getBoundingClientRect(),
 					width = bounds.width,
-					height = bounds.height;
+					height = bounds.height,
+					top = bounds.top;
+
+				/*console.log( scrollPos );
+				console.log( mp, top, "///", height );*/
 
 				// create individual svg components
 				var followers = svg.selectAll( "g" )
@@ -369,6 +363,7 @@ $( document ).ready ( function() {
 					})
 					.append( "circle" );  // function for old circle (static)
 
+				/* SVG: circle shape elements */
 				// create a variable for each circle
 				var oldCircle = svg.select( ".past" ),
 					newCircle = svg.select( ".latest" );
@@ -378,7 +373,59 @@ $( document ).ready ( function() {
 					.attr( "cx", 50 )
 					.attr( "cy", height / 2 )
 					.attr( "r", radius );
-				// add text for previous period
+
+				// Add static circle for current period
+				newCircle.select( "circle" )
+					.attr( "cx", width / 3 )
+					.attr( "cy", height / 2 )
+					.attr( "r", radius ) // start with same size as oldCircle
+					.style( "fill", "#396900" ); // start with same color as oldCircle
+
+				newCircle.selectAll( "circle" )
+					.transition( "playCircle" ) // create a transition with a name
+						.attr( "r", function() {
+							return ( sChange * radius ) + radius; // calculate new radius based on change in followers + update
+						})
+						.style( "fill", "#61AD00" ) // change color
+						.style( "stroke", "white" ) // add stroke
+				  		.delay( 200 ) // delay the start of the transition
+				  		.duration( function() {
+							return ( sChange * duration ) + duration; // calculate duration based on change in followers
+						});
+
+				/* Circle animation */
+				// create variable for each text element
+				var circToAnim = document.getElementById( "totals-" + media.platform );
+
+				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1 } );
+					TweenMax.set( textEl, { opacity: .5 } );
+					textTween.pause(); // pause tween until triggered by scene (below)
+
+				// create new scroll scene for each percent element
+				var textScene = new ScrollMagic.Scene( {
+					triggerElement: doeContainer,
+					triggerHook: 0,
+					duration: height + ( textEl.getBoundingClientRect().height * 1.25 )/*,
+					loglevel: 3*/
+				})
+				.setTween( textTween )
+				// .addIndicators( { name: "#totals-" + media.platform } )
+				.addTo( controller );
+
+				// tween scene forwards and backward
+				textScene.on( "enter start leave end", function( event ) {
+					// reverse if not inside the scene
+					if ( textScene.state() != "DURING" ) {
+						textTween.delay( 2 );
+						textTween.reverse();
+					} else { // play fowards otherwise
+						textTween.delay( 0 );
+						textTween.play();
+					}
+				});
+
+				/* SVG: text elements */
+				// add text over "past" circle
 				oldCircle.append( "text" )
 					.attr( "class", "years" )
 					.attr( "text-anchor", "middle" )
@@ -386,14 +433,7 @@ $( document ).ready ( function() {
 					.attr( "dy", height / 2 + 10 )
 					.text( prevYear - 1 );
 
-				// Add static circle for current period
-				newCircle.select( "circle" )
-					.attr( "cx", width / 3 )
-					.attr( "cy", height / 2 )
-					.attr( "r", function() {
-						return ( sChange * radius ) + radius;
-					});
-				// add text for latest period
+				// add text over "latest" circle
 				newCircle.append( "text" )
 					.attr( "class", "years" )
 					.attr( "text-anchor", "middle" )
@@ -401,27 +441,30 @@ $( document ).ready ( function() {
 					.attr( "dy", height / 2 + 10)
 					.text( prevYear );
 
-				// Add text with total number of followers
+				// Add text element with total number of followers
 				var addText = svg.append( "text" )
 					.attr( "id", "totals-" + media.platform )
 					.attr( "class", "info" )
 					.attr( "dy", 20 )
 					.attr( "dx", 50 )
-					.append( "tspan" ).attr( "class", "context" ).text( "more than" )
+					.append( "tspan" ).attr( "class", "context" ).text( "more than" ) // first line
 					.attr( "x", 0 );
 
+				// second line
 				svg.select( ".info" ).append( "tspan" ).attr( "class", "number" ).text( d3.format( ",.0d" )( sVals[1] ) ) // format number to an integer grouped by thousands with zero decimals
 					.attr( "x", 50 )
 					.attr( "dy", 40 );
 
+				// third line
 				svg.select( ".info" ).append( "tspan" ).attr( "class", "context" ).text( "total followers" )
 					.attr( "x", 50 )
 					.attr( "dy", 30 );
 
-				/* Text animation */
+				/* ANIMATE THE TEXT ELEMENT */
 				// create variable for each text element
 				var textEl = document.getElementById( "totals-" + media.platform );
 
+				// create tween for text animation
 				var textTween = TweenMax.to( textEl, 0.5, { opacity: 1 } );
 					TweenMax.set( textEl, { opacity: .5 } );
 					textTween.pause(); // pause tween until triggered by scene (below)
