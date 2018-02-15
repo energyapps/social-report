@@ -46,6 +46,12 @@ $( document ).ready ( function() {
 		duration = 1000, // follower circles: animation time in ms
 		scrollPos = controller.scrollPos(); // set variable for current scroll position
 
+	/*set universal functions*/
+	// callback function
+	function callback ( event ) {
+		console.log( event.type, event.progress );
+	}
+
 	// loop through all the sections
 	jQuery.each( sectionList, function( s, val ) {
 		// get target element id
@@ -224,12 +230,8 @@ $( document ).ready ( function() {
 			.setClassToggle( percentContainer, "showPercent" ) // add class toggle
 			.addTo( controller );
 
-			/*// ScrollMagic debugging function
-			function callback ( event ) {
-				console.log( pl, event.type, event.progress );
-			}
-			// execute debug function for this scene
-			percentScene.on( "progress start end", callback ); // add listeners for change*/
+			// execute callback function for this scene
+			// percentScene.on( "progress start end", callback ); // add listeners for change
 
 			// set options for new count
 			var options = {
@@ -326,17 +328,28 @@ $( document ).ready ( function() {
 			**/
 			// create a variable for the follower div IDs
 			var mp = "followers-" + media.platform;
-			// find all containers for each svg
-			var doeContainer = document.getElementById( mp );
+			// find containers for each svg
+			var doeContainer = document.getElementById( mp ),
+				containerParent = $( doeContainer ).parents( ".follower-container" ); // find parent div by class
 
-			if ( scrollPos > (doeContainer.offset + 200) ) {
-				console.log( "We're more than 200 away from " + mp );
+			// function for calculating circle area with default
+			function circArea( radius ) {
+				return Math.round( Math.pow( radius, 2 ) * Math.PI );
+			};
+			// function for calculating new radius
+			function newRadius ( v ) {
+				return Math.round ( Math.sqrt( ( circArea(radius) + ( v * circArea(radius) ) ) / Math.PI ) );
+			};
+
+			/*if ( containerParent.offset().top - scrollPos < 0 ) {
+				console.log( "We're too far away from " + mp );
+				// $( containerParent ).css( "position", "fixed" );
 			} else {
-				console.log( "Still too close to " + mp + ", don't hide yet" );
+				// $( containerParent ).css( "position", "initial" );
 			}
 
-			console.log( scrollPos, doeContainer.offsetTop,  scrollPos - doeContainer.offsetTop );
-
+			console.log( scrollPos, containerParent.offset().top,  );
+*/
 
 			/* CREATE SVG SHAPES AND TEXT INSIDE FOLLOWERS DIV */
 			if ( doeContainer != null ) {
@@ -356,7 +369,14 @@ $( document ).ready ( function() {
 					height = bounds.height,
 					top = bounds.top;
 
-				// console.log( mp, top, "///", height );
+				// console.log( /*$(doeContainer).offset().top, doeContainer.getBoundingClientRect().top, doeContainer.getBoundingClientRect().top +*/ height, doeContainer.getBoundingClientRect().height );
+
+				// console.log( "SCROLL POS:", scrollPos, $( window ).scrollTop(), /*"SVG TOP:", top, "CONTAINER TOP:", containerParent.offset().top, "FOLLOWERS DIV:", $(doeContainer).offset().top,*/ "|", mp );
+
+				// while( containerParent.offset().top != $(doeContainer).offset().top ) {
+				// 	svg.exit()
+				// 		.remove();
+				// }
 
 				// create individual svg components
 				var followers = svg.selectAll( "g" )
@@ -397,7 +417,7 @@ $( document ).ready ( function() {
 				function _circlePlay() {
 					latestCircle.transition( "playForward" ) // create a transition with a name
 						.attr( "r", function() {
-							return ( sChange * radius ) + radius; // calculate new radius based on change in followers + update
+							return newRadius ( sChange ); // calculate new radius based on change in followers + update
 							}
 						)
 						.style( "fill", "#61AD00" ) // change color
@@ -408,7 +428,6 @@ $( document ).ready ( function() {
 							return ( sChange * duration ) + duration; // calculate duration based on change in followers
 						});
 				}
-
 				/* Circle animation */
 				// create new scroll scene for each percent element
 				var circleScene = new ScrollMagic.Scene( {
@@ -416,7 +435,7 @@ $( document ).ready ( function() {
 					offset: -height / 2,
 					duration: height * 2
 				})
-				.addIndicators( { name: "#circles-" + media.platform } )
+				// .addIndicators( { name: "#circles-" + media.platform } )
 				.addTo( controller );
 
 				// tween scene forwards and backward
@@ -430,6 +449,36 @@ $( document ).ready ( function() {
 						_circlePlay();
 					}
 				});
+
+				circleScene.on( "change update progress start end enter leave", function( event ) {
+					console.log( event.type, mp );
+					// callback();
+					if ( "start" ) {
+						_circlePlay();
+					} else if ( "end" ) {
+						_circleReset();
+						if ( top > scrollPos && scrollPos > ( scrollPos + height ) ) {
+							$( doeContainer ).hide();
+						} else {
+							$( doeContainer ).show();
+						}
+					}
+				});
+
+				/*function _hideSVG() {
+					$( doeContainer ).show();*/
+					/*$( window ).scroll( function() {
+						if ( top < scrollPos && scrollPos > ( scrollPos + height ) ) {
+							console.log( scrollPos + height );
+							console.log( "showing", mp );
+							$( doeContainer ).show();
+						} else {
+							$( doeContainer ).hide();
+							// console.log( "hiding", mp );
+						}
+					});*/
+				/*};*/
+
 				/* SVG: text elements */
 				// add text over "past" circle
 				pastData.append( "text" )

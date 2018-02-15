@@ -10,7 +10,6 @@ podcasts: #9933CC
 ANIMATION FOR CIRCLES!!!
  */
 
-
 var duration   = 500,
     transition = 200;
 
