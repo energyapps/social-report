@@ -13,9 +13,9 @@ $( document ).ready ( function() {
 			 callback: showInfo,
 			 wanted: [ "energy_social", "energy_youtube", "s1_social" ], // specifying sheets to load
 			 parseNumbers: true/*,
-			 postProcess: function(element) {
-				// convert string date to Date date
-				element["launch_date"] = Date.parse(element["launch_date"]);
+			 postProcess: function( element ) {
+				// format date string
+				element["launch_date"] = Date.parse( element["launch_date"] );
 			 }*/
 			 // , debug: true
 		 })
@@ -361,7 +361,7 @@ $( document ).ready ( function() {
 				//create svg container
 				var svg = d3.select( doeContainer ).append( "svg" )
 					.data( [sVals] )
-					.attr( "id", mp );
+					.attr( "id", mp + "-svg" );
 
 				// get dimensions of svg
 				var bounds = svg.node().getBoundingClientRect(),
@@ -438,46 +438,23 @@ $( document ).ready ( function() {
 				// .addIndicators( { name: "#circles-" + media.platform } )
 				.addTo( controller );
 
-				// tween scene forwards and backward
-				circleScene.on( "enter start leave end", function( event ) {
-					// reverse if not inside the scene
-					if ( circleScene.state() != "DURING" ) {
-						latestCircle.transition().on( "end", function() {
-							_circleReset();
-						});
-					} else { // play fowards otherwise
-						_circlePlay();
-					}
+				// Tween scene on enter
+				circleScene.on( "enter", function( event ) {
+					console.log( event.type, mp, "show" );
+					_circlePlay();
+					$( doeContainer ).show();
 				});
 
-				circleScene.on( "change update progress start end enter leave", function( event ) {
-					console.log( event.type, mp );
-					// callback();
-					if ( "start" ) {
-						_circlePlay();
-					} else if ( "end" ) {
+				// Tween scene on leave
+				circleScene.on( "leave", function( event ) {
+					// reset latest circle to start
+					latestCircle.transition().on( "end", function() {
 						_circleReset();
-						if ( top > scrollPos && scrollPos > ( scrollPos + height ) ) {
-							$( doeContainer ).hide();
-						} else {
-							$( doeContainer ).show();
-						}
-					}
+					});
+					// hide the svg
+					$( doeContainer ).hide();
+					// console.log( event.type, mp, "hide" );
 				});
-
-				/*function _hideSVG() {
-					$( doeContainer ).show();*/
-					/*$( window ).scroll( function() {
-						if ( top < scrollPos && scrollPos > ( scrollPos + height ) ) {
-							console.log( scrollPos + height );
-							console.log( "showing", mp );
-							$( doeContainer ).show();
-						} else {
-							$( doeContainer ).hide();
-							// console.log( "hiding", mp );
-						}
-					});*/
-				/*};*/
 
 				/* SVG: text elements */
 				// add text over "past" circle
