@@ -61,13 +61,7 @@ section {
 	 width: 100%;
 }
 
-#outro {
-	background-color: #61AD00;
-	height: calc(100vh);
-	z-index: 999999999;
-}
-
-#intro:after, #outro:after {
+#intro:after {
 	 height: 60px;
 	 font-family: "Work Sans", "Helvetica", sans-serif;
 	 font-weight: 400;
@@ -114,13 +108,6 @@ section {
 	z-index: 10000;
 }
 
-/*#outro:after {
-	 position: absolute;
-	 left: 0;
-	 top: -60px;
-	 content: 'We Did it, Fam';
-}*/
-
 .touch#intro {
 	 height: calc(100vh - (60px + 64px));
 }
@@ -145,17 +132,13 @@ section {
 	 transition: all .02s ease-in-out;
 }
 
-/* BACKGROUND */
-#intro .knockout, #outro .knockout {
+/* INTRO BACKGROUND */
+#intro .knockout {
 	 position: relative;
 }
 
 #intro .knockout {
 	 background-image: url("../images/site-intro.svg");
-}
-
-#outro .knockout {
-	 /*background-image: url("https://static.mailchimp.com/report-2015/desktop/outro.svg");*/
 }
 
 .knockout {
@@ -238,6 +221,18 @@ section {
 
 #stats-ig .brand { /*temporary fix for ig logo*/
     margin-left: 50px !important;
+    margin-top: 20% !important;
+}
+
+.platform-link {
+    bottom: 23%;
+    display: block;
+    font-size: 2vw;
+    margin: 0 5rem 0;
+    position: fixed;
+    visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    z-index: 500;
 }
 
 .show {
@@ -247,17 +242,6 @@ section {
     -moz-animation: slideUp 0.5s ease alternate forwards;
     -o-animation: slideUp 0.5s ease alternate forwards;
     -ms-animation: slideUp 0.5s ease alternate forwards;
-}
-
-.platform-link {
-    bottom: 35%;
-    display: block;
-    font-size: 2vw;
-    margin: 0 5rem 0;
-    position: fixed;
-    visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-    z-index: 500;
 }
 
 .brand.show,
@@ -400,6 +384,63 @@ svg {
   -moz-animation: slideLeft ease 1s forwards;
   -o-animation: slideLeft ease 1s forwards;
   -ms-animation: slideLeft ease 1s forwards;
+}
+
+/* Outro */
+#outro {
+	background-color: #61AD00;
+	height: 100vh;
+	padding: 15rem;
+	position: relative;
+	width: 100%;
+	z-index: 999999999;
+}
+
+#outro div {
+	margin-top: 10vh;
+}
+
+#outro h1 {
+	font-size: 4rem;
+	margin: 0;
+	line-height: 1;
+}
+
+div#impressions {
+	animation: slideUp ease 1s 1s backwards;
+	-webkit-animation: slideUp ease 1s 1s backwards;
+	-moz-animation: slideUp ease 1s 1s backwards;
+	-o-animation: slideUp ease 1s 1s backwards;
+	-ms-animation: slideUp ease 1s 1s backwards;
+}
+
+div#followers {
+	animation: slideUp ease 1s 2s backwards;
+	-webkit-animation: slideUp ease 1s 2s backwards;
+	-moz-animation: slideUp ease 1s 2s backwards;
+	-o-animation: slideUp ease 1s 2s backwards;
+	-ms-animation: slideUp ease 1s 2s backwards;
+}
+
+.account-type {
+	background-color: white;
+	color: green;
+	font-size: 2rem;
+	font-weight: 900;
+	margin: 0 0 1.0rem;
+	padding: 1.5rem;
+	display: inline-block;
+}
+
+.total-number {
+	font-size: 10vh;
+	margin: 0;
+	padding: 5rem 0;
+}
+
+.fine-print {
+	font-size: 1.75rem;
+	margin: -10rem 0 0;
 }
 
 /***
@@ -593,6 +634,61 @@ svg {
 	opacity: 1;
 	-ms-transform: translate(0px,0px);
   }
+}
+
+@keyframes slideUp {
+	0% {
+		opacity: 0;
+		transform: translate(0px,103vw);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(0px,0px);
+	}
+}
+
+@-moz-keyframes slideUp {
+	0% {
+		opacity: 0;
+		transform: translate(0px,103vw);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(0px,0px);
+	}
+}
+
+@-webkit-keyframes slideUp {
+	0% {
+		opacity: 0;
+		transform: translate(0px,103vw);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(0px,0px);
+	}
+}
+
+@-o-keyframes slideUp {
+	0% {
+		opacity: 0;
+		transform: translate(0px,103vw);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(0px,0px);
+	}
+}
+
+@-ms-keyframes slideUp {
+	0% {
+		opacity: 0;
+		transform: translate(0px,103vw);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(0px,0px);
+	}
 }
 
 /***
