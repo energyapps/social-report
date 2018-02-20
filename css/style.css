@@ -134,16 +134,16 @@ section {
 
 /* INTRO BACKGROUND */
 #intro .knockout {
-	 /* position: fixed; */
+	 position: relative;
 }
 
 #intro .knockout {
-	 background-image: url("../images/site-intro-dimensionless.svg");
+	 background-image: url("../images/site-intro.svg");
 }
 
 .knockout {
 	background-attachment: fixed;
-	/* background-position: left 500%; */ /* fix for iphone 5 */
+	background-position: left 500%; /* fix for iphone 5 */
 	background-repeat: no-repeat;
 	/* background-size: 50% auto; */ /* fix for iphone 5 – need to fix other queries */
 	height: 100%;
@@ -701,7 +701,7 @@ div#followers {
 		margin-left: 29%;
 	}
 	#intro .knockout {
-		/* background-position: center 55%; */
+		background-position: center 55%;
 		/* background-size: 100vw; */
 	}
 }
@@ -720,8 +720,8 @@ div#followers {
 
 @media (min-width: 1200px) {
 	#intro .knockout {
-		/*background-position: center;
-		background-size: 100%;*/
+		/* background-position: center 54%; */
+		/* background-size: 92vw; */
 	}
 
 	#intro .title {
