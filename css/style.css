@@ -143,8 +143,15 @@ section {
 	_background-image: url("../images/digital-energy.png"); /* hack for IE 6/7 */
 }
 
-/* Hack for IE 10+ */
+/* Hack for IE 10/11 */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	#intro .knockout {
+		background-image: url("../images/digital-energy.png");
+	}
+}
+
+/* Hack for Edge (IE 12/13/14/15) */
+@supports (-ms-ime-align:auto) {
 	#intro .knockout {
 		background-image: url("../images/digital-energy.png");
 	}
@@ -154,7 +161,7 @@ section {
 	background-attachment: fixed;
 	background-position: left 500%; /* fix for iphone 5 */
 	background-repeat: no-repeat;
-	/* background-size: 50% auto; */ /* fix for iphone 5 – need to fix other queries */
+	background-size: 50% auto;  /* fix for iphone 5 – need to fix other queries */
 	height: 100%;
 	width: 100%;
 }
