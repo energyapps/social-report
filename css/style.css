@@ -139,9 +139,11 @@ section {
 
 #intro .knockout {
 	background-image: url("../images/site-intro.svg");
+	background-image: url("../images/site-intro.svg")\9; /* hack for IE 8/9 */
+	_background-image: url("../images/site-intro.svg"); /* hack for IE 6/7 */
 }
 
-/* Fix for IE 10+ */
+/* Hack for IE 10+ */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
 	#intro .knockout {
 		background-image: url("../images/digital-energy.png");
