@@ -1,0 +1,91 @@
+/* iPHONE 5 VERTICAL */
+#intro .knockout {
+    position: relative;
+}
+.knockout {
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+}
+.parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
+#intro .knockout {
+    /*background-image: url(../images/site-intro.svg);
+    background-image: url(../images/digital-energy.png)\9;*/
+    background-position: 0px 135%;
+    background-size: 58%;
+    /*background-size: contain\9;
+    _background-image: url(../images/digital-energy.png);
+    _background-position: center;
+    _background-size: contain;*/
+}
+
+/* iPHONE 5 HORIZONTAL 568 x 320 */
+#intro .knockout {
+    background-position: left 56%;
+    background-size: 60%;
+}
+
+/* iPHONE 7/8 VERTICAL 375 x 667 */
+#intro .knockout {
+    background-position: left 110%;
+    background-size: 65%;
+}
+
+/* iPHONE 7/8 HORIZONTAL 667 x 375 */
+#intro .knockout {
+    background-position: left 56%;
+    background-size: 65%;
+}
+
+/* iPHONE 7/8 PLUS VERTICAL 414 x 736 */
+#intro .knockout {
+    background-position: left 130%;
+    background-size: 59%;
+}
+
+/* iPHONE 7/8 PLUS HORIZONTAL 736 x 414 */
+#intro .knockout {
+    background-position: left 58%;
+    background-size: 59%;
+}
+
+/* iPHONE X (min-width: 768) HORIZONTAL 812 x 375 */
+#intro .knockout {
+	background-position: left 55%;
+	background-size: 65%;
+}
+
+/* iPHONE X VERTICAL 375 x 812 */
+/* need to fix the svg containers for followers, width exceeds device width */
+#intro .knockout {
+	background-position: left 255%;
+	background-size: 60%;
+}
+
+/* iPAD (min-width: 768) VERTICAL (BY 1024) */
+#intro .knockout {
+	background-position: left 85%;
+	background-size: 60%;
+}
+
+/* iPAD (min-width: 1024) HORIZONTAL (BY 768) */
+/* need to fix the ALL containers after intro, width exceeds device width */
+#intro .knockout {
+	background-position: left 60%;
+	background-size: 60%;
+}
+
+/* iPAD PRO (min-width: 1024) HORIZONTAL (BY 1366) */
+/* need to fix the ALL containers after intro, width exceeds device width */
+#intro .knockout {
+	background-position: left 56%;
+	background-size: cover;
+}
