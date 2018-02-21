@@ -49,7 +49,11 @@ $( document ).ready ( function() {
 	/*set universal functions*/
 	// callback function
 	function callback ( event ) {
-		console.log( event.type, event.progress );
+		if ( event.type == "progress" ) {
+			console.log( event.type, event.progress );
+		} else if ( event.type == "update" ) {
+			console.log( event.target, event.startPos, event.endPos );
+		}
 	}
 
 	// loop through all the sections
@@ -61,33 +65,30 @@ $( document ).ready ( function() {
 
 		var t = $( sParams ).offset().top,
 			h = $( sParams ).height(),
-			brandCont = $( sParams ).children( ".logo-container" ),
+			brandCont = "#" + $( sParams ).data( "brand" ) + "-profile" /*$( sParams ).children( ".logo-container" )*/,
 			logo = "#" + $( sParams ).data( "brand" ),
 			handleCont = "#" + $( sParams ).data( "brand" ) + "-handle";
 
 		// check for IDs with sec prefix
 		if ( sectionID.includes( secPrefix ) ) {
-			var logo = "#" + secPrefix + "-" + $( sParams ).data( "brand" ),
+			var brandCont = "#" + secPrefix + "-" + $( sParams ).data( "brand" ) + "-profile",
+				logo = "#" + secPrefix + "-" + $( sParams ).data( "brand" ),
 				handleCont = "#" + secPrefix + "-" + $( sParams ).data( "brand" ) + "-handle";
 		};
 
 		// create new scroll scene for each section
 		var sectionScene = new ScrollMagic.Scene( {
+			triggerHook: 1,
 			triggerElement: sParams,
 			duration: h
+			/*offset: t,*/
 			})
-			.setClassToggle( logo, "show" ) // add class toggle
-			// .addIndicators( { name: logo } )
-			.addTo( controller );
-
-		// create new scroll scene for platform info divs
-		var handleScene = new ScrollMagic.Scene( {
-			triggerElement: logo,
-			duration: h
+			.setClassToggle( brandCont, "show" ) // add class toggle
+			.setPin( brandCont, {
+				pushFollowers: false,
+				spacerClass: "pin-spacer"
 			})
-			.setPin( handleCont )
-			.setClassToggle( handleCont, "show" ) // add class toggle
-			// .addIndicators( { name: handleCont } )
+			.addIndicators( { name: brandCont } )
 			.addTo( controller );
 
 		// find all elements with counter class
@@ -136,9 +137,6 @@ $( document ).ready ( function() {
 					offset: -140,
 					// reverse: true,
 					duration: hCont + 280
-					})
-					.setPin( logo, {
-						pushFollowers: false
 					})
 					.setTween( countTween )
 					// .addIndicators( { name: counterID } )

@@ -223,18 +223,18 @@ section {
 #stats-li.section { background-color: #0077B5; }
 
 .logo-container {
-	/*height: 0;*/
+	left: 0;
+	top: 50% !important; /*override the scene placement of this container*/
 	visibility: hidden;
-	z-index: 1000;
+	/* z-index: 1000; */
+	padding-left: 5rem;
+	height: 0 !important;
 }
 
 .brand  {
 	fill: #ffffff;
 	height: 100px;
-	left: 50px;
-	/*visibility: hidden;*/
 	width: 100px;
-	z-index: 1000;
 }
 
 #stats-fb .brand { /*add bg for FB "f"*/
@@ -243,34 +243,13 @@ section {
 }
 
 #stats-ig .brand { /*temporary fix for ig logo*/
-    margin-left: 50px !important;
-    margin-top: 20% !important;
+    /*margin-left: 50px !important;
+    margin-top: 20% !important;*/
 }
 
 .platform-link {
-    bottom: 23%;
-    display: block;
     font-size: 2vw;
-    margin: 0 5rem 0;
-    position: fixed;
-    /*visibility: hidden;*/
     -webkit-font-smoothing: antialiased;
-    /*z-index: 500;*/
-}
-
-.show {
-    /* animation */
-    animation: slideUp 0.5s ease alternate forwards;
-    -webkit-animation: slideUp 0.5s ease alternate forwards;
-    -moz-animation: slideUp 0.5s ease alternate forwards;
-    -o-animation: slideUp 0.5s ease alternate forwards;
-    -ms-animation: slideUp 0.5s ease alternate forwards;
-}
-
-/*.brand.show,
-.platform-link.show,*/
-.logo-container.show {
-    visibility: visible;
 }
 
 .handle, .handle:visited {
@@ -281,6 +260,22 @@ section {
 .handle:hover {
     color: lightgray;
     text-decoration: underline;
+}
+
+/*.brand.show,
+.platform-link.show,*/
+.logo-container.show {
+    visibility: visible;
+    /*position: static;*/
+}
+
+.show {
+    /* animation */
+    animation: slideUp 500ms ease 0ms alternate forwards;
+    -webkit-animation: slideUp 0.5s ease alternate forwards;
+    -moz-animation: slideUp 0.5s ease alternate forwards;
+    -o-animation: slideUp 0.5s ease alternate forwards;
+    -ms-animation: slideUp 0.5s ease alternate forwards;
 }
 
 /* COUNTERS */
