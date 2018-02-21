@@ -8,7 +8,7 @@ html {
 
 html, body {
 	height: 100%;
-	width: 100%;
+	width: 100vw;
 }
 
 h1,
@@ -80,7 +80,7 @@ section {
 #intro:before {
 	content: '';
 	display: block;
-	background-color: rgba(97, 173, 0);
+	background-color: rgb(97, 173, 0);
 	background-image: url( "../images/2017_Total_Solar_Eclipse_(NHQ201708210100).jpg" );
 	background-position: center;
 	background-repeat:  no-repeat;
@@ -144,7 +144,7 @@ section {
 #intro .knockout {
 	background-image: url("../images/site-intro.svg");
 	background-position: 0px 135%;
-    background-size: 58%;
+	background-size: 100vw;
 	position: relative;
 
 	/* hacks for IE 8/9 */
@@ -467,44 +467,117 @@ div#followers {
 /***
 **** MEDIA QUERIES
 ****/
-@media (min-width: 768px) {
-	#intro .title {
-		font-size: 7vw;
-		margin-left: 29%;
-	}
-	#intro .knockout {
-		background-position: center 55%;
-		/* background-size: cover; */
-	}
-}
 
-@media (min-width: 1040px) {
+/*@media (min-width: 1040px) {
 	#intro .knockout {
 		background-position: center 54%;
-		/* background-size: cover; */
+		 background-size: cover;
 	}
 
 	#intro .title {
 		font-size: 6vw;
 		margin-top: 42%;
 	}
+}*/
+
+/* iPhone 5+ (min-width: 375) */
+@media only screen and (min-width: 375px) and (orientation: landscape) {
+	#intro .knockout {
+		background-position: left 55%;
+		background-size: 100vw;
+	}
+
+	#intro .title {
+		display: none;
+	}
 }
 
-@media (min-width: 1200px) {
+/* iPhone 7/8 (min-width: 375) */
+@media only screen and (min-width: 375px) and (orientation: landscape) {
 	#intro .knockout {
-		background-position: center 54%;
-		/* background-size: cover; */
+		background-position: left 55%;
+		background-size: 100vw;
+	}
+
+	#intro .title {
+		display: none;
+	}
+}
+
+/* iPhone 7/8 PLUS (min-width: 375) */
+@media only screen and (min-width: 640px) and (min-height: 376px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3) {
+	#intro .knockout {
+		background-position: left 55%;
+		background-size: 100vw;
+	}
+
+	#intro .title {
+		display: none;
+	}
+}
+
+/* Nexus 5X */
+@media only screen and (min-width: 640px) and (-webkit-min-device-pixel-ratio: 2.6) {
+	#intro .knockout {
+		background-position: left 55%;
+		background-size: 100vw;
+	}
+
+	#intro .title {
+		display: none;
+	}
+}
+
+/* iPhone X and Galaxy S5 */
+@media only screen and (min-width: 640px) and (max-height: 375px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3) {
+	#intro .knockout {
+		background-position: left 55%;
+		background-size: 100vw;
+	}
+
+	#intro .title {
+		display: none;
+	}
+}
+
+/* iPad+ (min-width: 768) VERTICAL (768 x 1024) */
+@media only screen and (min-width: 768px) and (orientation: portrait) {
+	#intro .knockout {
+		background-position: left 70%;
+		background-size: 100vw;
+	}
+
+	#intro .title {
+		font-size: 7vw;
+		margin: auto 50vw 30vh 30vw;
+	}
+}
+
+/* iPad+ HORIZONTAL (1024 x 768) */
+/* need to fix the ALL containers after intro, width exceeds device width */
+@media only screen and (min-width: 768px) and (orientation: landscape) {
+	#intro .knockout {
+		background-position: left 55%;
+		background-size: 100vw;
 	}
 
 	#intro .title {
 		font-size: 6vw;
-		margin-left: 31%;
+		margin: auto 50vw 30vh 30vw;
+	}
+}
+
+/* DESKTOP: large+ screens ----------- */
+@media only screen and (min-width: 1200px) and (orientation: landscape) {
+	#intro .title {
+		font-size: 5vw;
+		margin: auto 50vw 30vh 20%;
 	}
 
 	#intro:before {
 		background-color: #61AD00;
 		background-position: center center;
-		background-size: 90vw;
+		background-size: 100vw;
 	}
 
 	#intro:after {
@@ -512,6 +585,31 @@ div#followers {
 	}
 }
 
+/* DESKTOP: very large+ screens ----------- */
+@media only screen and (min-device-width: 1366px) and (max-device-width: 1366px) and (orientation: landscape)  {
+	/*#intro .knockout {
+		 background-position: left 60%;
+		 background-size: 100vw;
+	}
+
+	#intro .title {
+	    font-size: 5vw;
+	    margin: auto 60vw 15% 20%;
+	}*/
+}
+
+/* DESKTOP: extra large screens ----------- */
+@media only screen  and (min-width: 1824px) {
+	/*#intro .knockout {
+		background-position: left 60%;
+	 	background-size: cover;
+	}
+
+	#intro .title {
+	    font-size: 5vw;
+	    margin: auto 35% 15% 20%;
+	}*/
+}
 
 
 /***
