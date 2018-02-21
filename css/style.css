@@ -223,14 +223,16 @@ section {
 #stats-li.section { background-color: #0077B5; }
 
 .logo-container {
-	height: 0;
+	/*height: 0;*/
+	visibility: hidden;
+	z-index: 1000;
 }
 
 .brand  {
 	fill: #ffffff;
 	height: 100px;
 	left: 50px;
-	visibility: hidden;
+	/*visibility: hidden;*/
 	width: 100px;
 	z-index: 1000;
 }
@@ -251,9 +253,9 @@ section {
     font-size: 2vw;
     margin: 0 5rem 0;
     position: fixed;
-    visibility: hidden;
+    /*visibility: hidden;*/
     -webkit-font-smoothing: antialiased;
-    z-index: 500;
+    /*z-index: 500;*/
 }
 
 .show {
@@ -265,8 +267,9 @@ section {
     -ms-animation: slideUp 0.5s ease alternate forwards;
 }
 
-.brand.show,
-.platform-link.show {
+/*.brand.show,
+.platform-link.show,*/
+.logo-container.show {
     visibility: visible;
 }
 
@@ -567,8 +570,20 @@ div#followers {
 	}
 }
 
+@media only screen and (min-width: 1200px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3)  {
+	#intro .knockout {
+		background-position: left 50%;
+		background-size: 100vw;
+	}
+}
+
 /* DESKTOP: large+ screens ----------- */
 @media only screen and (min-width: 1200px) and (orientation: landscape) {
+	#intro .knockout {
+		background-position: left 50%;
+		background-size: 100vw;
+	}
+
 	#intro .title {
 		font-size: 5vw;
 		margin: auto 50vw 30vh 20%;
