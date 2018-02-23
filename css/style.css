@@ -322,6 +322,7 @@ svg {
 	height: 100%;
 	margin-right: 2rem;
 	min-height: 40rem;
+	max-width: 80vw;
 	padding-left: 20vw;
 	position: relative;
 	top: 25%;
@@ -366,7 +367,7 @@ svg {
 /* follower percent change */
 .percent {
 	font-size: 10vmax;
-	margin: 0 1em 0 0;
+	padding: 0 1em 0 0;
 	text-align: right;
 	visibility: hidden;
 }
