@@ -85,8 +85,8 @@ $( document ).ready ( function() {
 			})
 			.setClassToggle( brandCont, "show" ) // add class toggle
 			.setPin( brandCont, {
-				pushFollowers: false,
-				spacerClass: "pin-spacer"
+				pushFollowers: false/*,
+				spacerClass: "pin-spacer"*/
 			})
 			// .addIndicators( { name: brandCont } )
 			.addTo( controller );
@@ -578,12 +578,18 @@ $( document ).ready ( function() {
 				secVals = d3.values( s1FollNum[key] );
 
 			// set parameters for new count
-			var secStart = secVals[0] /*cParams.dataset.startval*/,
+			var secStart = secVals[0],
 				secEnd = secVals[1],
 				// cUpdate = cParams.dataset.endval,
 				secDuration = 1,
-				secOptions = {
-					useEasing: true
+				secOptFwd = {
+					useEasing: true,
+					useGrouping: true
+				},
+				secOptBkd = {
+					delay: 2,
+					useEasing: true,
+					useGrouping: true
 				};
 
 			// loop through all counters
@@ -605,8 +611,8 @@ $( document ).ready ( function() {
 					// console.log ( "Done counting", complete );
 				}
 				// create SECRETARY'S counter functions
-				var secCountUpFwd = new CountUp( counterID , secStart, secEnd, 0, secDuration, secOptions ), // forward
-					secCountUpBkd = new CountUp( counterID , secEnd , secStart, 0, secDuration * 5  , secOptions ); // backward
+				var secCountUpFwd = new CountUp( counterID , secStart, secEnd, 0, secDuration, secOptFwd ), // forward
+					secCountUpBkd = new CountUp( counterID , secEnd , secStart, 0, secDuration * 5, secOptBkd ); // backward
 
 				// create new scroll scene for each percent element
 				var secFollScene = new ScrollMagic.Scene( {
@@ -617,25 +623,29 @@ $( document ).ready ( function() {
 					// .addIndicators( { name: counterID } )
 					.addTo( controller );
 
+				// PLAY SCENE FORWARDS
+				secFollScene.on( "enter", function( event ) {
+					// Run forward count
+					if ( !secCountUpFwd.error ) { // function ok
+						secCountUpFwd.start( callOnComplete );
+						secCountUpBkd.reset();
+					} else { // function error
+						console.error( "there's an error with the impression tween", secCountUpFwd.error );
+					}
+				});
+
 				// PLAY SCENE BACKWARDS ON LEAVE
 				secFollScene.on( "leave", function( event ) {
 					// Run backwards count
 					if ( !secCountUpBkd.error ) { // function ok
-						secCountUpBkd.start( callOnComplete );
-						secCountUpFwd.reset();
+						if ( complete ) {
+							complete = false;
+							secCountUpBkd.start();
+							secCountUpFwd.reset();
+						}
 					} else { // function error
 						console.error( "there's an error with the impression tween", secCountUpBkd.error );
 						// console.log( isNaN( secStart ), isNaN( secEnd ) );
-					}
-				});
-
-				secFollScene.on( "enter", function( event ) {
-					// Run forward count
-					if ( !secCountUpFwd.error ) { // function ok
-						secCountUpBkd.reset();
-						secCountUpFwd.start( callOnComplete );
-					} else { // function error
-						console.error( "there's an error with the impression tween", secCountUpFwd.error );
 					}
 				});
 			});
@@ -657,6 +667,13 @@ $( document ).ready ( function() {
 			$( "#total-impressions > .total-number:first-child" ).text( totalImps );
 			$( "#total-followers > .total-number:first-child" ).text( s1NewFollows );
 		}
+
+		// create new scroll scene for outro
+		var outroScene = new ScrollMagic.Scene( {
+			triggerElement: "#outro"
+			})
+			// .addIndicators( { name: brandCont } )
+			.addTo( controller );
 	}
 });
 
