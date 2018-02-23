@@ -139,7 +139,7 @@ $( document ).ready ( function() {
 					duration: hCont + 500
 					})
 					.setTween( countTween )
-					.addIndicators( { name: counterID } )
+					// .addIndicators( { name: counterID } )
 					.addTo( controller );
 
 				// PLAY SCENE BACKWARDS ON LEAVE
