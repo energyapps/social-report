@@ -408,15 +408,16 @@ svg {
 /* Outro */
 #outro {
 	background-color: #61AD00;
-	height: 100vh;
-	padding: 15rem;
+	height: 100%;
+	min-height: 100vh;
+	padding: 5rem;
 	position: relative;
 	width: 100%;
 	z-index: 999999999;
 }
 
 #outro div {
-	margin-top: 10vh;
+	margin-top: 8vh;
 }
 
 #outro h1 {
@@ -547,24 +548,26 @@ div#followers {
 
 	#intro .title {
 		font-size: 7vw;
-		margin: auto 50vw 30vh 30vw;
+		margin: auto 10vw 30vh 30vw;
 	}
 }
 
 /* iPad+ HORIZONTAL (1024 x 768) */
 /* need to fix the ALL containers after intro, width exceeds device width */
-@media only screen and (min-width: 768px) and (orientation: landscape) {
+@media only screen and (min-device-width: 768px) and (orientation: landscape) {
 	#intro .knockout {
 		background-position: left 55%;
 		background-size: 100vw;
 	}
 
 	#intro .title {
+		display: block;
 		font-size: 6vw;
-		margin: auto 50vw 30vh 30vw;
+		margin: auto 10vw 30vh 30vw;
 	}
 }
 
+/* Large mobile device (iPad pro, Samsung) ----------- */
 @media only screen and (min-width: 1200px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3)  {
 	#intro .knockout {
 		background-position: left 50%;
@@ -572,16 +575,30 @@ div#followers {
 	}
 }
 
-/* DESKTOP: large+ screens ----------- */
-@media only screen and (min-width: 1200px) and (orientation: landscape) {
+/* DESKTOP: medium+ screens */
+@media only screen and (min-width: 768px) and (orientation: landscape) {
 	#intro .knockout {
-		background-position: left 50%;
+		background-position: left 55%;
 		background-size: 100vw;
 	}
 
 	#intro .title {
+		display: block;
+		font-size: 6vw;
+		margin: auto 10vw 0 30vw;
+	}
+}
+
+
+/* DESKTOP: large+ screens ----------- */
+@media only screen and (min-width: 1200px) and (orientation: landscape) {
+	#intro .knockout {
+		background-position: left 50%;
+	}
+
+	#intro .title {
 		font-size: 5vw;
-		margin: auto 50vw 30vh 20%;
+		margin: auto 10vw 30vh 20%;
 	}
 
 	#intro:before {

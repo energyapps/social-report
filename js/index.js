@@ -44,7 +44,7 @@ $( document ).ready ( function() {
 	var secPrefix = "sec", // Secretary's prefix
 		radius = 100, // follower circles: default radius
 		duration = 1000, // follower circles: animation time in ms
-		scrollPos = controller.scrollPos(); // set variable for current scroll position
+		scrollPos = controller.scrollPos(); // current scroll position
 
 	/*set universal functions*/
 	// callback function
@@ -88,7 +88,7 @@ $( document ).ready ( function() {
 				pushFollowers: false,
 				spacerClass: "pin-spacer"
 			})
-			.addIndicators( { name: brandCont } )
+			// .addIndicators( { name: brandCont } )
 			.addTo( controller );
 
 		// find all elements with counter class
@@ -641,7 +641,7 @@ $( document ).ready ( function() {
 			});
 		});
 
-	/* TOTAL IMPRESSSIONS */
+	/* CONCLUSION: TOTAL IMPRESSIONS */
 		// load data from totals
 		var totalSheet = data.totals.elements;
 
