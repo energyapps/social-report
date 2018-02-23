@@ -128,18 +128,18 @@ $( document ).ready ( function() {
 
 				// create fade tween for counters
 				var countTween = TweenMax.to( cParams, 1.0, { opacity: 1 } );
-					TweenMax.set( cParams, { opacity: 0.02 } );
+					TweenMax.set( cParams, { opacity: 0.5 } );
 					countTween.pause(); // pause tween until triggered by scene (below)
 
 				// create new scroll scene for each percent element
 				var impressionScene = new ScrollMagic.Scene( {
 					triggerElement: sParams,
-					offset: -140,
+					offset: -250,
 					// reverse: true,
-					duration: hCont + 280
+					duration: hCont + 500
 					})
 					.setTween( countTween )
-					// .addIndicators( { name: counterID } )
+					.addIndicators( { name: counterID } )
 					.addTo( controller );
 
 				// PLAY SCENE BACKWARDS ON LEAVE
@@ -147,7 +147,7 @@ $( document ).ready ( function() {
 					if ( event.scrollDirection == "FORWARD" ) {
 						// console.log( event.scrollDirection, counterID );
 						// delay tween and play backwards (fade out)
-						countTween.delay( 3 );
+						countTween.delay( 12 );
 						countTween.reverse();
 					}
 					// Run backwards count
